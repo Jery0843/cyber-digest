@@ -71,5 +71,4 @@ export interface ArchiveGroup {
 // Cloudflare env bindings
 export interface Env {
   DB: D1Database;
-  AI: Ai;
 }

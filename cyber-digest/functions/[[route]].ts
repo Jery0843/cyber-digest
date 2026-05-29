@@ -1,0 +1,188 @@
+import { type Context, Hono } from 'hono';
+import { handle } from 'hono/cloudflare-pages';
+import {
+  getAllTags,
+  getArchiveDates,
+  getLatestPosts,
+  getPostBySlug,
+  getPostCount,
+  getPostCountByType,
+  getPostsByDate,
+  getPostsByTag,
+  getPostsByType,
+  getTodaysPosts,
+} from '../src/lib/db';
+import type { Env as AppEnv, Post, PostSource, PostType, PostWithTags } from '../src/lib/types';
+
+type Bindings = AppEnv;
+type HonoEnv = { Bindings: Bindings };
+
+const app = new Hono<HonoEnv>();
+const siteUrl = 'https://cyberdigest.pages.dev';
+
+function escapeHtml(value: unknown): string {
+  return String(value ?? '')
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
+}
+
+function escapeAttr(value: unknown): string {
+  return escapeHtml(value);
+}
+
+function formatDate(value?: string, long = false): string {
+  if (!value) return 'N/A';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return date.toLocaleDateString('en-US', long
+    ? { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }
+    : { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+function severityClass(score: number): string {
+  if (score >= 9) return 'severity-badge--critical';
+  if (score >= 7) return 'severity-badge--high';
+  if (score >= 4) return 'severity-badge--medium';
+  return 'severity-badge--low';
+}
+
+function severityLabel(score: number): string {
+  if (score >= 9) return 'CRITICAL';
+  if (score >= 7) return 'HIGH';
+  if (score >= 4) return 'MEDIUM';
+  return 'LOW';
+}
+
+function typeBadge(type: PostType): string {
+  return `<span class="type-badge type-badge--${type}">${escapeHtml(type)}</span>`;
+}
+
+function tagBadge(name: string): string {
+  return `<a class="tag-badge" href="/tags/${encodeURIComponent(name)}">#${escapeHtml(name)}</a>`;
+}
+
+function nav(): string {
+  return `<nav class="site-nav"><div class="container site-nav__inner"><a class="site-logo" href="/"><span>◆</span> CyberDigest</a><div class="site-nav__links"><a href="/news">News</a><a href="/blog">Blog</a><a href="/articles">Articles</a><a href="/archive">Archive</a><a href="/rss.xml">RSS</a></div></div></nav>`;
+}
+
+function footer(): string {
+  return `<footer class="site-footer"><div class="container site-footer__inner"><p>Automated daily cybersecurity intelligence powered by Cloudflare D1 and Workers AI.</p><p>CyberDigest</p></div></footer>`;
+}
+
+function layout(options: { title?: string; description?: string; path?: string; ogType?: string; head?: string; body: string }): string {
+  const title = options.title ?? 'CyberDigest — Daily Cybersecurity Intelligence';
+  const description = options.description ?? 'Automated daily cybersecurity news, educational blogs, and in-depth threat analysis. Powered by trusted sources and AI.';
+  const canonical = `${siteUrl}${options.path ?? '/'}`;
+  return `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="${escapeAttr(description)}"><meta name="theme-color" content="#060a13"><title>${escapeHtml(title)}</title><link rel="canonical" href="${escapeAttr(canonical)}"><meta property="og:title" content="${escapeAttr(title)}"><meta property="og:description" content="${escapeAttr(description)}"><meta property="og:type" content="${escapeAttr(options.ogType ?? 'website')}"><meta property="og:url" content="${escapeAttr(canonical)}"><meta property="og:site_name" content="CyberDigest"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${escapeAttr(title)}"><meta name="twitter:description" content="${escapeAttr(description)}"><link rel="alternate" type="application/rss+xml" title="CyberDigest RSS" href="/rss.xml"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="stylesheet" href="/styles/site.css">${options.head ?? ''}</head><body>${nav()}<main>${options.body}</main>${footer()}</body></html>`;
+}
+
+function postCard(post: Post): string {
+  const confidence = Number(post.confidence_score ?? 0);
+  const severity = confidence > 0 ? `<span class="severity-badge ${severityClass(confidence)}">${severityLabel(confidence)} ${confidence.toFixed(1)}</span>` : '';
+  return `<a href="/post/${encodeURIComponent(post.slug)}" class="post-card glass-card animate-in"><div class="post-card__header">${typeBadge(post.type)}${severity}</div><h3 class="post-card__title">${escapeHtml(post.title)}</h3><p class="post-card__summary">${escapeHtml(post.summary)}</p><div class="post-card__footer"><time class="post-card__date" datetime="${escapeAttr(post.published_at)}">${formatDate(post.published_at)}</time><span class="post-card__sources">${post.source_count} source${post.source_count === 1 ? '' : 's'}</span></div></a>`;
+}
+
+function postGrid(posts: Post[], emptyMessage: string): string {
+  if (!posts.length) {
+    return `<div class="empty-state"><div class="empty-state__icon">◇</div><h3 class="empty-state__title">No posts yet</h3><p class="empty-state__text">${escapeHtml(emptyMessage)}</p></div>`;
+  }
+  return `<div class="post-grid">${posts.map(postCard).join('')}</div>`;
+}
+
+async function safePosts<T>(fn: () => Promise<T>, fallback: T): Promise<T> {
+  try {
+    return await fn();
+  } catch (error) {
+    console.error(error);
+    return fallback;
+  }
+}
+
+app.get('/', async (c) => {
+  const db = c.env.DB;
+  const [todayPosts, recentPosts, totalCount] = await Promise.all([
+    safePosts(() => getTodaysPosts(db), [] as Post[]),
+    safePosts(() => getLatestPosts(db, 9), [] as Post[]),
+    safePosts(() => getPostCount(db), 0),
+  ]);
+  const today = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+  const todaySection = todayPosts.length ? `<section class="page-content"><div class="container"><div class="section-header"><p class="section-header__label">Today's Intelligence</p><h2 class="section-header__title">Latest <span>Posts</span></h2></div>${postGrid(todayPosts, '')}</div></section>` : '';
+  return c.html(layout({
+    path: '/',
+    body: `<section class="hero"><div class="hero__bg"></div><div class="container hero__inner"><div class="hero__content"><div class="hero__status"><span class="hero__pulse"></span><span class="hero__status-text">LIVE INTELLIGENCE FEED</span></div><h1 class="hero__title"><span class="hero__title-line">Cybersecurity</span><span class="hero__title-accent">Daily Digest</span></h1><p class="hero__subtitle">${escapeHtml(today)}</p><p class="hero__description">Automated threat intelligence from NVD, CISA, GitHub Security, and trusted sources. AI-generated analysis you can verify.</p><div class="hero__stats"><div class="hero__stat"><span class="hero__stat-value">${todayPosts.length}</span><span class="hero__stat-label">Today's Posts</span></div><div class="hero__stat"><span class="hero__stat-value">${totalCount}</span><span class="hero__stat-label">Total Published</span></div><div class="hero__stat"><span class="hero__stat-value">4</span><span class="hero__stat-label">Active Sources</span></div></div></div><div class="hero__terminal"><div class="terminal__header"><span class="terminal__dot terminal__dot--red"></span><span class="terminal__dot terminal__dot--yellow"></span><span class="terminal__dot terminal__dot--green"></span><span class="terminal__title">cyber-digest — cron.log</span></div><div class="terminal__body"><p><span class="t-green">$</span> cron triggered @ 02:00 UTC</p><p><span class="t-muted">[1/6]</span> fetching NVD CVE feed... <span class="t-green">✓</span></p><p><span class="t-muted">[2/6]</span> fetching CISA KEV catalog... <span class="t-green">✓</span></p><p><span class="t-muted">[3/6]</span> fetching GitHub advisories... <span class="t-green">✓</span></p><p><span class="t-muted">[4/6]</span> deduplicating events... <span class="t-green">✓</span></p><p><span class="t-muted">[5/6]</span> ranking by severity... <span class="t-green">✓</span></p><p><span class="t-muted">[6/6]</span> generating posts... <span class="t-green">✓</span></p><p class="t-green">→ ${todayPosts.length} posts published</p><p><span class="t-cursor">█</span></p></div></div></div></section>${todaySection}<section class="page-content"><div class="container"><div class="section-header"><p class="section-header__label">Recent Intelligence</p><h2 class="section-header__title">All <span>Recent Posts</span></h2></div>${postGrid(recentPosts, 'No posts yet. The daily cron will publish the first batch soon.')}</div></section>`,
+  }));
+});
+
+async function listingPage(c: Context<HonoEnv>, type: PostType, title: string, label: string, description: string) {
+  const [posts, total] = await Promise.all([
+    safePosts(() => getPostsByType(c.env.DB, type, 30), [] as Post[]),
+    safePosts(() => getPostCountByType(c.env.DB, type), 0),
+  ]);
+  return c.html(layout({
+    title: `${title} — CyberDigest`,
+    description,
+    path: `/${type === 'article' ? 'articles' : type}`,
+    body: `<section class="page-content"><div class="container"><div class="section-header animate-in"><p class="section-header__label">${escapeHtml(label)}</p><h1 class="section-header__title">${title}</h1><p class="page-desc">${escapeHtml(description)} ${total} posts total.</p></div>${postGrid(posts, `No ${type} posts yet. The daily cron will publish the first batch soon.`)}</div></section>`,
+  }));
+}
+
+app.get('/news', (c) => listingPage(c, 'news', 'Cyber <span>News</span>', 'Daily Updates', 'Short, concise cybersecurity updates.'));
+app.get('/blog', (c) => listingPage(c, 'blog', 'Cyber <span>Blog</span>', 'Educational Posts', 'Practical cybersecurity explainers and context.'));
+app.get('/articles', (c) => listingPage(c, 'article', 'Threat <span>Articles</span>', 'Deep Analysis', 'Long-form security analysis and prioritization guidance.'));
+
+app.get('/post/:slug', async (c) => {
+  const slug = c.req.param('slug');
+  const post = await safePosts(() => getPostBySlug(c.env.DB, slug), null as PostWithTags | null);
+  if (!post) return c.redirect('/');
+  const relatedPosts = await safePosts(() => getPostsByType(c.env.DB, post.type, 3), [] as Post[]);
+  const related = relatedPosts.filter((item) => item.slug !== post.slug).slice(0, 2);
+  const jsonLd = JSON.stringify({ '@context': 'https://schema.org', '@type': 'Article', headline: post.title, description: post.summary, datePublished: post.published_at, author: { '@type': 'Organization', name: 'CyberDigest' }, publisher: { '@type': 'Organization', name: 'CyberDigest' }, url: `${siteUrl}/post/${post.slug}`, keywords: post.tags.join(', ') }).replaceAll('<', '\\u003c');
+  const sources = post.sources.length ? `<div class="post-page__sources glass-card animate-in"><h3 class="post-page__sources-title">Sources</h3><ul class="post-page__sources-list">${post.sources.map((source: PostSource) => `<li><a href="${escapeAttr(source.source_url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(source.source_name)}</a><span class="source-url">${escapeHtml(new URL(source.source_url).hostname)}</span></li>`).join('')}</ul></div>` : '';
+  const relatedSection = related.length ? `<section class="post-page__related"><div class="container"><div class="section-header"><p class="section-header__label">Related</p><h2 class="section-header__title">More <span>${escapeHtml(post.type)} posts</span></h2></div>${postGrid(related, '')}</div></section>` : '';
+  return c.html(layout({
+    title: `${post.title} — CyberDigest`,
+    description: post.summary,
+    path: `/post/${post.slug}`,
+    ogType: 'article',
+    head: `<script type="application/ld+json">${jsonLd}</script>`,
+    body: `<article class="post-page"><div class="container container--narrow"><header class="post-page__header animate-in"><div class="post-page__meta">${typeBadge(post.type)}<time datetime="${escapeAttr(post.published_at)}">${formatDate(post.published_at, true)}</time></div><h1 class="post-page__title">${escapeHtml(post.title)}</h1><p class="post-page__summary">${escapeHtml(post.summary)}</p>${post.tags.length ? `<div class="post-page__tags">${post.tags.map(tagBadge).join('')}</div>` : ''}</header><div class="post-page__info glass-card animate-in"><div class="info-item"><span class="info-label">Confidence</span><span class="info-value">${(Number(post.confidence_score) * 10).toFixed(0)}%</span></div><div class="info-item"><span class="info-label">Sources</span><span class="info-value">${post.source_count}</span></div><div class="info-item"><span class="info-label">Model</span><span class="info-value info-value--mono">${escapeHtml(post.model || 'AI')}</span></div><div class="info-item"><span class="info-label">Event Date</span><span class="info-value">${formatDate(post.event_date, true)}</span></div></div><div class="post-content animate-in">${post.content}</div>${sources}</div>${relatedSection}</article>`,
+  }));
+});
+
+app.get('/tags/:tag', async (c) => {
+  const tag = decodeURIComponent(c.req.param('tag'));
+  const posts = await safePosts(() => getPostsByTag(c.env.DB, tag, 30), [] as Post[]);
+  return c.html(layout({ title: `#${tag} — CyberDigest`, path: `/tags/${encodeURIComponent(tag)}`, body: `<section class="page-content"><div class="container"><div class="section-header"><p class="section-header__label">Tag</p><h1 class="section-header__title">#${escapeHtml(tag)}</h1></div>${postGrid(posts, 'No posts found for this tag.')}</div></section>` }));
+});
+
+app.get('/archive', async (c) => {
+  const groups = await safePosts(() => getArchiveDates(c.env.DB), [] as { date: string; count: number }[]);
+  const rows = await Promise.all(groups.map(async (group) => {
+    const posts = await safePosts(() => getPostsByDate(c.env.DB, group.date), [] as Post[]);
+    return `<div class="glass-card archive-row"><div><strong>${escapeHtml(formatDate(group.date, true))}</strong><p class="page-desc">${group.count} post${group.count === 1 ? '' : 's'}</p></div><div>${posts.map((post) => `<a href="/post/${encodeURIComponent(post.slug)}">${escapeHtml(post.title)}</a>`).join('<br>')}</div></div>`;
+  }));
+  return c.html(layout({ title: 'Archive — CyberDigest', path: '/archive', body: `<section class="page-content"><div class="container"><div class="section-header"><p class="section-header__label">Archive</p><h1 class="section-header__title">Published <span>History</span></h1></div><div class="list-grid">${rows.join('') || '<p class="empty-state__text">No archive entries yet.</p>'}</div></div></section>` }));
+});
+
+app.get('/rss.xml', async (c) => {
+  const posts = await safePosts(() => getLatestPosts(c.env.DB, 50), [] as Post[]);
+  const items = posts.map((post) => `<item><title>${escapeHtml(post.title)}</title><link>${siteUrl}/post/${encodeURIComponent(post.slug)}</link><guid>${siteUrl}/post/${encodeURIComponent(post.slug)}</guid><description>${escapeHtml(post.summary)}</description><pubDate>${new Date(post.published_at).toUTCString()}</pubDate><category>${escapeHtml(post.type)}</category></item>`).join('');
+  return c.body(`<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>CyberDigest</title><link>${siteUrl}</link><description>Automated daily cybersecurity intelligence.</description>${items}</channel></rss>`, 200, { 'content-type': 'application/rss+xml; charset=UTF-8' });
+});
+
+app.get('/sitemap.xml', async (c) => {
+  const [posts, tags] = await Promise.all([
+    safePosts(() => getLatestPosts(c.env.DB, 200), [] as Post[]),
+    safePosts(() => getAllTags(c.env.DB), [] as { name: string; count: number }[]),
+  ]);
+  const staticUrls = ['/', '/news', '/blog', '/articles', '/archive'];
+  const urls = [...staticUrls.map((path) => `${siteUrl}${path}`), ...posts.map((post) => `${siteUrl}/post/${encodeURIComponent(post.slug)}`), ...tags.map((tag) => `${siteUrl}/tags/${encodeURIComponent(tag.name)}`)];
+  return c.body(`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls.map((url) => `<url><loc>${escapeHtml(url)}</loc></url>`).join('')}</urlset>`, 200, { 'content-type': 'application/xml; charset=UTF-8' });
+});
+
+app.get('/robots.txt', (c) => c.text(`User-agent: *\nAllow: /\nSitemap: ${siteUrl}/sitemap.xml\n`));
+
+export const onRequest = handle(app);

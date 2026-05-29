@@ -10,9 +10,6 @@
 			"database_id": "d269b677-ba44-4335-aba7-e1fb9c3cbd23"
 		}
 	],
-	"ai": {
-		"binding": "AI"
-	},
 	"observability": {
 		"enabled": true
 	}

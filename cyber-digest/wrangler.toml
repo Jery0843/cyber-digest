@@ -6,6 +6,3 @@ pages_build_output_dir = "./dist"
 binding = "DB"
 database_name = "cyber_daily"
 database_id = "d269b677-ba44-4335-aba7-e1fb9c3cbd23"
-
-[ai]
-binding = "AI"
