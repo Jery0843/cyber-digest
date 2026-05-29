@@ -64,19 +64,45 @@ function tagBadge(name: string): string {
   return `<a class="tag-badge" href="/tags/${encodeURIComponent(name)}">#${escapeHtml(name)}</a>`;
 }
 
-function nav(): string {
-  return `<nav class="site-nav"><div class="container site-nav__inner"><a class="site-logo" href="/"><span>◆</span> CyberDigest</a><div class="site-nav__links"><a href="/news">News</a><a href="/blog">Blog</a><a href="/articles">Articles</a><a href="/archive">Archive</a><a href="/rss.xml">RSS</a></div></div></nav>`;
-}
-
-function footer(): string {
-  return `<footer class="site-footer"><div class="container site-footer__inner"><p>Automated daily cybersecurity intelligence powered by Cloudflare D1 and Workers AI.</p><p>CyberDigest</p></div></footer>`;
+function sidebar(currentPath: string): string {
+  const isActive = (path: string) => currentPath === path ? 'sidebar__link--active' : '';
+  return `<aside class="dashboard-sidebar">
+    <div class="sidebar__brand"><span>[</span>CYBERDIGEST<span>]</span></div>
+    <nav class="sidebar__nav">
+      <a href="/" class="sidebar__link ${isActive('/')}"><span class="icon">⊞</span> Dashboard</a>
+      <a href="/news" class="sidebar__link ${isActive('/news')}"><span class="icon">⚡</span> Intelligence</a>
+      <a href="/blog" class="sidebar__link ${isActive('/blog')}"><span class="icon">📝</span> Reports</a>
+      <a href="/articles" class="sidebar__link ${isActive('/articles')}"><span class="icon">📚</span> Global Threats</a>
+      <a href="/archive" class="sidebar__link ${isActive('/archive')}"><span class="icon">🗄️</span> Resources</a>
+    </nav>
+    <div class="sidebar__footer">
+      <a href="/rss.xml" class="sidebar__link"><span class="icon">📡</span> RSS Feed</a>
+      <div class="sidebar__status">System Online <span class="status-pulse"></span></div>
+    </div>
+  </aside>`;
 }
 
 function layout(options: { title?: string; description?: string; path?: string; ogType?: string; head?: string; body: string }): string {
   const title = options.title ?? 'CyberDigest — Daily Cybersecurity Intelligence';
   const description = options.description ?? 'Automated daily cybersecurity news, educational blogs, and in-depth threat analysis. Powered by trusted sources and AI.';
   const canonical = `${siteUrl}${options.path ?? '/'}`;
-  return `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="${escapeAttr(description)}"><meta name="theme-color" content="#060a13"><title>${escapeHtml(title)}</title><link rel="canonical" href="${escapeAttr(canonical)}"><meta property="og:title" content="${escapeAttr(title)}"><meta property="og:description" content="${escapeAttr(description)}"><meta property="og:type" content="${escapeAttr(options.ogType ?? 'website')}"><meta property="og:url" content="${escapeAttr(canonical)}"><meta property="og:site_name" content="CyberDigest"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${escapeAttr(title)}"><meta name="twitter:description" content="${escapeAttr(description)}"><link rel="alternate" type="application/rss+xml" title="CyberDigest RSS" href="/rss.xml"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="stylesheet" href="/styles/site.css">${options.head ?? ''}</head><body>${nav()}<main>${options.body}</main>${footer()}</body></html>`;
+  return `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="${escapeAttr(description)}"><meta name="theme-color" content="#02040a"><title>${escapeHtml(title)}</title><link rel="canonical" href="${escapeAttr(canonical)}"><meta property="og:title" content="${escapeAttr(title)}"><meta property="og:description" content="${escapeAttr(description)}"><meta property="og:type" content="${escapeAttr(options.ogType ?? 'website')}"><meta property="og:url" content="${escapeAttr(canonical)}"><meta property="og:site_name" content="CyberDigest"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${escapeAttr(title)}"><meta name="twitter:description" content="${escapeAttr(description)}"><link rel="alternate" type="application/rss+xml" title="CyberDigest RSS" href="/rss.xml"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="stylesheet" href="/styles/site.css">${options.head ?? ''}</head><body class="dashboard-body"><div class="dashboard-layout">${sidebar(options.path ?? '/')} <main class="dashboard-main">${options.body}</main></div></body></html>`;
+}
+
+function feedCard(post: Post): string {
+  const confidence = Number(post.confidence_score ?? 0);
+  const severityClassStr = severityClass(confidence);
+  const severityLbl = severityLabel(confidence);
+  return `<a href="/post/${encodeURIComponent(post.slug)}" class="feed-card animate-in">
+    <div class="feed-card__severity feed-card__severity--${severityLbl.toLowerCase()}">
+      <span class="feed-severity-label">${severityLbl}</span>
+      <span class="feed-time">${formatDate(post.published_at)}</span>
+    </div>
+    <div class="feed-card__content">
+      <h4 class="feed-title">${escapeHtml(post.title)}</h4>
+      <span class="feed-source">${post.source_count} source(s)</span>
+    </div>
+  </a>`;
 }
 
 function postCard(post: Post): string {
@@ -117,9 +143,38 @@ app.get('/', async (c) => {
   
   const recentSection = olderRecentPosts.length ? `<section class="page-content"><div class="container"><div class="section-header"><p class="section-header__label">Recent Intelligence</p><h2 class="section-header__title">All <span>Recent Posts</span></h2></div>${postGrid(olderRecentPosts, 'No older posts yet.')}</div></section>` : '';
 
+  const allPosts = [...todayPosts, ...olderRecentPosts];
+
   return c.html(layout({
     path: '/',
-    body: `<section class="hero"><div class="hero__bg"></div><div class="container hero__inner"><div class="hero__content"><div class="hero__status"><span class="hero__pulse"></span><span class="hero__status-text">LIVE INTELLIGENCE FEED</span></div><h1 class="hero__title"><span class="hero__title-line">Cybersecurity</span><span class="hero__title-accent">Daily Digest</span></h1><p class="hero__subtitle">${escapeHtml(today)}</p><p class="hero__description">Automated threat intelligence from NVD, CISA, GitHub Security, and trusted sources. AI-generated analysis you can verify.</p><div class="hero__stats"><div class="hero__stat"><span class="hero__stat-value">${todayPosts.length}</span><span class="hero__stat-label">Today's Posts</span></div><div class="hero__stat"><span class="hero__stat-value">${totalCount}</span><span class="hero__stat-label">Total Published</span></div><div class="hero__stat"><span class="hero__stat-value">4</span><span class="hero__stat-label">Active Sources</span></div></div></div><div class="hero__spatial glass-card animate-in"><div class="spatial__header"><div class="spatial__icon">⎔</div><div class="spatial__title">AETHER / Spatial AI</div></div><div class="spatial__body"><div class="spatial__metric"><span class="spatial__label">Active Threats</span><span class="spatial__value spatial__value--cyan">2,045</span></div><div class="spatial__metric"><span class="spatial__label">Global Risk</span><span class="spatial__value spatial__value--purple">9.8</span></div></div><div class="spatial__footer"><span class="spatial__pulse"></span> Real-time monitoring active</div></div></div></section>${todaySection}${recentSection}`,
+    body: `
+      <div class="dashboard-center">
+        <div class="holographic-map">
+          <div class="map-globe"></div>
+          <div class="map-overlay">
+             <div class="hero__status"><span class="hero__pulse"></span><span class="hero__status-text">SYSTEM ACTIVE</span></div>
+             <h1>GLOBAL THREAT LANDSCAPE</h1>
+             <p class="map-subtitle">Tracking ${totalCount} confirmed anomalies</p>
+          </div>
+          <div class="map-metrics">
+            <div class="map-metric">
+              <span class="metric-val">${todayPosts.length}</span>
+              <span class="metric-lbl">24H ALERTS</span>
+            </div>
+            <div class="map-metric">
+              <span class="metric-val">4</span>
+              <span class="metric-lbl">DATA STREAMS</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <aside class="dashboard-feed">
+        <div class="feed-header">LIVE INTELLIGENCE</div>
+        <div class="feed-content">
+           ${allPosts.map(feedCard).join('')}
+        </div>
+      </aside>
+    `,
   }));
 });
 
@@ -132,7 +187,16 @@ async function listingPage(c: Context<HonoEnv>, type: PostType, title: string, l
     title: `${title} — CyberDigest`,
     description,
     path: `/${type === 'article' ? 'articles' : type}`,
-    body: `<section class="page-content"><div class="container"><div class="section-header animate-in"><p class="section-header__label">${escapeHtml(label)}</p><h1 class="section-header__title">${title}</h1><p class="page-desc">${escapeHtml(description)} ${total} posts total.</p></div>${postGrid(posts, `No ${type} posts yet. The daily cron will publish the first batch soon.`)}</div></section>`,
+    body: `
+      <div class="dashboard-content-area">
+        <div class="dashboard-header animate-in">
+          <p class="dashboard-header__label">${escapeHtml(label)}</p>
+          <h1 class="dashboard-header__title">${title}</h1>
+          <p class="dashboard-header__desc">${escapeHtml(description)} ${total} records found.</p>
+        </div>
+        ${postGrid(posts, `No ${type} records located in database.`)}
+      </div>
+    `,
   }));
 }
 
@@ -155,14 +219,34 @@ app.get('/post/:slug', async (c) => {
     path: `/post/${post.slug}`,
     ogType: 'article',
     head: `<script type="application/ld+json">${jsonLd}</script>`,
-    body: `<article class="post-page"><div class="container container--narrow"><a href="/" class="back-link">← Back to Intelligence</a><header class="post-page__header animate-in"><div class="post-page__meta">${typeBadge(post.type)}<time datetime="${escapeAttr(post.published_at)}">${formatDate(post.published_at, true)}</time></div><h1 class="post-page__title">${escapeHtml(post.title)}</h1><p class="post-page__summary">${escapeHtml(post.summary)}</p>${post.tags.length ? `<div class="post-page__tags">${post.tags.map(tagBadge).join('')}</div>` : ''}</header><div class="post-page__info glass-card animate-in"><div class="info-item"><span class="info-label">Confidence</span><span class="info-value">${(Number(post.confidence_score) * 10).toFixed(0)}%</span></div><div class="info-item"><span class="info-label">Sources</span><span class="info-value">${post.source_count}</span></div><div class="info-item"><span class="info-label">Model</span><span class="info-value info-value--mono">${escapeHtml(post.model || 'AI')}</span></div><div class="info-item"><span class="info-label">Event Date</span><span class="info-value">${formatDate(post.event_date, true)}</span></div></div><div class="post-content animate-in">${post.content}</div>${sources}</div>${relatedSection}</article>`,
+    body: `
+      <div class="dashboard-content-area dashboard-content-area--post">
+        <article class="post-page animate-in">
+          <header class="post-page__header">
+            <div class="post-page__meta">${typeBadge(post.type)}<time datetime="${escapeAttr(post.published_at)}">${formatDate(post.published_at, true)}</time></div>
+            <h1 class="post-page__title">${escapeHtml(post.title)}</h1>
+            <p class="post-page__summary">${escapeHtml(post.summary)}</p>
+            ${post.tags.length ? `<div class="post-page__tags">${post.tags.map(tagBadge).join('')}</div>` : ''}
+          </header>
+          <div class="post-page__info animate-in">
+            <div class="info-item"><span class="info-label">Confidence</span><span class="info-value">${(Number(post.confidence_score) * 10).toFixed(0)}%</span></div>
+            <div class="info-item"><span class="info-label">Sources</span><span class="info-value">${post.source_count}</span></div>
+            <div class="info-item"><span class="info-label">Model</span><span class="info-value info-value--mono">${escapeHtml(post.model || 'AI')}</span></div>
+            <div class="info-item"><span class="info-label">Event Date</span><span class="info-value">${formatDate(post.event_date, true)}</span></div>
+          </div>
+          <div class="post-content animate-in">${post.content}</div>
+          ${sources}
+        </article>
+        ${relatedSection}
+      </div>
+    `,
   }));
 });
 
 app.get('/tags/:tag', async (c) => {
   const tag = decodeURIComponent(c.req.param('tag'));
   const posts = await safePosts(() => getPostsByTag(c.env.DB, tag, 30), [] as Post[]);
-  return c.html(layout({ title: `#${tag} — CyberDigest`, path: `/tags/${encodeURIComponent(tag)}`, body: `<section class="page-content"><div class="container"><div class="section-header"><p class="section-header__label">Tag</p><h1 class="section-header__title">#${escapeHtml(tag)}</h1></div>${postGrid(posts, 'No posts found for this tag.')}</div></section>` }));
+  return c.html(layout({ title: `#${tag} — CyberDigest`, path: `/tags/${encodeURIComponent(tag)}`, body: `<div class="dashboard-content-area"><div class="dashboard-header animate-in"><p class="dashboard-header__label">Tag</p><h1 class="dashboard-header__title">#${escapeHtml(tag)}</h1></div>${postGrid(posts, 'No posts found for this tag.')}</div>` }));
 });
 
 app.get('/archive', async (c) => {
@@ -171,7 +255,7 @@ app.get('/archive', async (c) => {
     const posts = await safePosts(() => getPostsByDate(c.env.DB, group.date), [] as Post[]);
     return `<div class="glass-card archive-row"><div><strong>${escapeHtml(formatDate(group.date, true))}</strong><p class="page-desc">${group.count} post${group.count === 1 ? '' : 's'}</p></div><div>${posts.map((post) => `<a href="/post/${encodeURIComponent(post.slug)}">${escapeHtml(post.title)}</a>`).join('<br>')}</div></div>`;
   }));
-  return c.html(layout({ title: 'Archive — CyberDigest', path: '/archive', body: `<section class="page-content"><div class="container"><div class="section-header"><p class="section-header__label">Archive</p><h1 class="section-header__title">Published <span>History</span></h1></div><div class="list-grid">${rows.join('') || '<p class="empty-state__text">No archive entries yet.</p>'}</div></div></section>` }));
+  return c.html(layout({ title: 'Archive — CyberDigest', path: '/archive', body: `<div class="dashboard-content-area"><div class="dashboard-header animate-in"><p class="dashboard-header__label">Archive</p><h1 class="dashboard-header__title">Published History</h1></div><div class="list-grid">${rows.join('') || '<p class="empty-state__text">No archive entries yet.</p>'}</div></div>` }));
 });
 
 app.get('/rss.xml', async (c) => {
