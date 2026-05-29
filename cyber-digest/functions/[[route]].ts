@@ -217,12 +217,14 @@ async function listingPage(c: Context<HonoEnv>, type: PostType, title: string, l
     path: `/${type === 'article' ? 'articles' : type}`,
     body: `
       <div class="dashboard-content-area">
-        <div class="dashboard-header animate-in">
-          <p class="dashboard-header__label">${escapeHtml(label)}</p>
-          <h1 class="dashboard-header__title">${title}</h1>
-          <p class="dashboard-header__desc">${escapeHtml(description)} ${total} records found.</p>
+        <div class="container">
+          <div class="dashboard-header animate-in">
+            <p class="dashboard-header__label">${escapeHtml(label)}</p>
+            <h1 class="dashboard-header__title">${title}</h1>
+            <p class="dashboard-header__desc">${escapeHtml(description)} ${total} records found.</p>
+          </div>
+          ${postGrid(posts, `No ${type} records located in database.`)}
         </div>
-        ${postGrid(posts, `No ${type} records located in database.`)}
       </div>
     `,
   }));
@@ -249,18 +251,20 @@ app.get('/post/:slug', async (c) => {
     head: `<script type="application/ld+json">${jsonLd}</script>`,
     body: `
       <div class="dashboard-content-area">
-        <article class="post-page animate-in">
-          <header class="post-page__header">
-            <div class="post-page__meta">${typeBadge(post.type)}<time datetime="${escapeAttr(post.published_at)}">${formatDate(post.published_at, true)}</time></div>
-            <h1 class="post-page__title">${escapeHtml(post.title)}</h1>
-            <p class="post-page__summary">${escapeHtml(post.summary)}</p>
-            ${post.tags.length ? `<div class="post-page__tags">${post.tags.map(tagBadge).join('')}</div>` : ''}
-          </header>
+        <div class="container">
+          <article class="post-page animate-in">
+            <header class="post-page__header">
+              <div class="post-page__meta">${typeBadge(post.type)}<time datetime="${escapeAttr(post.published_at)}">${formatDate(post.published_at, true)}</time></div>
+              <h1 class="post-page__title">${escapeHtml(post.title)}</h1>
+              <p class="post-page__summary">${escapeHtml(post.summary)}</p>
+              ${post.tags.length ? `<div class="post-page__tags">${post.tags.map(tagBadge).join('')}</div>` : ''}
+            </header>
 
-          <div class="post-content animate-in">${post.content}</div>
-          ${sources}
-        </article>
-        ${relatedSection}
+            <div class="post-content animate-in">${post.content}</div>
+            ${sources}
+          </article>
+          ${relatedSection}
+        </div>
       </div>
     `,
   }));
@@ -269,7 +273,7 @@ app.get('/post/:slug', async (c) => {
 app.get('/tags/:tag', async (c) => {
   const tag = decodeURIComponent(c.req.param('tag'));
   const posts = await safePosts(() => getPostsByTag(c.env.DB, tag, 30), [] as Post[]);
-  return c.html(layout({ title: `#${tag} — CyberDigest`, path: `/tags/${encodeURIComponent(tag)}`, body: `<div class="dashboard-content-area"><div class="dashboard-header animate-in"><p class="dashboard-header__label">Tag</p><h1 class="dashboard-header__title">#${escapeHtml(tag)}</h1></div>${postGrid(posts, 'No posts found for this tag.')}</div>` }));
+  return c.html(layout({ title: `#${tag} — CyberDigest`, path: `/tags/${encodeURIComponent(tag)}`, body: `<div class="dashboard-content-area"><div class="container"><div class="dashboard-header animate-in"><p class="dashboard-header__label">Tag</p><h1 class="dashboard-header__title">#${escapeHtml(tag)}</h1></div>${postGrid(posts, 'No posts found for this tag.')}</div></div>` }));
 });
 
 app.get('/archive', async (c) => {
@@ -278,7 +282,7 @@ app.get('/archive', async (c) => {
     const posts = await safePosts(() => getPostsByDate(c.env.DB, group.date), [] as Post[]);
     return `<div class="glass-card archive-row"><div><strong>${escapeHtml(formatDate(group.date, true))}</strong><p class="page-desc">${group.count} post${group.count === 1 ? '' : 's'}</p></div><div>${posts.map((post) => `<a href="/post/${encodeURIComponent(post.slug)}">${escapeHtml(post.title)}</a>`).join('<br>')}</div></div>`;
   }));
-  return c.html(layout({ title: 'Archive — CyberDigest', path: '/archive', body: `<div class="dashboard-content-area"><div class="dashboard-header animate-in"><p class="dashboard-header__label">Archive</p><h1 class="dashboard-header__title">Published History</h1></div><div class="list-grid">${rows.join('') || '<p class="empty-state__text">No archive entries yet.</p>'}</div></div>` }));
+  return c.html(layout({ title: 'Archive — CyberDigest', path: '/archive', body: `<div class="dashboard-content-area"><div class="container"><div class="dashboard-header animate-in"><p class="dashboard-header__label">Archive</p><h1 class="dashboard-header__title">Published History</h1></div><div class="list-grid">${rows.join('') || '<p class="empty-state__text">No archive entries yet.</p>'}</div></div></div>` }));
 });
 
 app.get('/rss.xml', async (c) => {
