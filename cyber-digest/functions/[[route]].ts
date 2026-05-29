@@ -86,7 +86,7 @@ function layout(options: { title?: string; description?: string; path?: string; 
   const title = options.title ?? 'CyberDigest — Daily Cybersecurity Intelligence';
   const description = options.description ?? 'Automated daily cybersecurity news, educational blogs, and in-depth threat analysis. Powered by trusted sources and AI.';
   const canonical = `${siteUrl}${options.path ?? '/'}`;
-  return `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="${escapeAttr(description)}"><meta name="theme-color" content="#02040a"><title>${escapeHtml(title)}</title><link rel="canonical" href="${escapeAttr(canonical)}"><meta property="og:title" content="${escapeAttr(title)}"><meta property="og:description" content="${escapeAttr(description)}"><meta property="og:type" content="${escapeAttr(options.ogType ?? 'website')}"><meta property="og:url" content="${escapeAttr(canonical)}"><meta property="og:site_name" content="CyberDigest"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${escapeAttr(title)}"><meta name="twitter:description" content="${escapeAttr(description)}"><link rel="alternate" type="application/rss+xml" title="CyberDigest RSS" href="/rss.xml"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="stylesheet" href="/styles/site.css">${options.head ?? ''}</head><body class="dashboard-body"><div class="dashboard-layout">${sidebar(options.path ?? '/')} <main class="dashboard-main">${options.body}</main></div></body></html>`;
+  return `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="${escapeAttr(description)}"><meta name="theme-color" content="#02040a"><title>${escapeHtml(title)}</title><link rel="canonical" href="${escapeAttr(canonical)}"><meta property="og:title" content="${escapeAttr(title)}"><meta property="og:description" content="${escapeAttr(description)}"><meta property="og:type" content="${escapeAttr(options.ogType ?? 'website')}"><meta property="og:url" content="${escapeAttr(canonical)}"><meta property="og:site_name" content="CyberDigest"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${escapeAttr(title)}"><meta name="twitter:description" content="${escapeAttr(description)}"><link rel="alternate" type="application/rss+xml" title="CyberDigest RSS" href="/rss.xml"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet"><link rel="stylesheet" href="/styles/site.css">${options.head ?? ''}</head><body class="dashboard-body"><div class="dashboard-layout">${sidebar(options.path ?? '/')} <main class="dashboard-main">${options.body}</main></div></body></html>`;
 }
 
 function feedCard(post: Post): string {
@@ -152,19 +152,31 @@ app.get('/', async (c) => {
         <div class="holographic-map">
           <div class="map-globe">
             <svg viewBox="0 0 100 100" class="globe-svg">
-              <ellipse cx="50" cy="50" rx="45" ry="15" fill="none" stroke="rgba(0,240,255,0.3)" stroke-width="0.5"/>
-              <ellipse cx="50" cy="50" rx="45" ry="30" fill="none" stroke="rgba(0,240,255,0.3)" stroke-width="0.5"/>
-              <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(0,240,255,0.5)" stroke-width="1"/>
-              <ellipse cx="50" cy="50" rx="15" ry="45" fill="none" stroke="rgba(0,240,255,0.3)" stroke-width="0.5"/>
-              <ellipse cx="50" cy="50" rx="30" ry="45" fill="none" stroke="rgba(0,240,255,0.3)" stroke-width="0.5"/>
-              <line x1="50" y1="5" x2="50" y2="95" stroke="rgba(0,240,255,0.3)" stroke-width="0.5"/>
-              <circle cx="30" cy="40" r="1.5" fill="var(--accent-purple)" class="pulse-node"/>
-              <circle cx="70" cy="60" r="1.5" fill="var(--accent-green)" class="pulse-node"/>
-              <circle cx="65" cy="30" r="1.5" fill="var(--accent-green)" class="pulse-node" style="animation-delay: 1s"/>
-              <circle cx="40" cy="70" r="1.5" fill="var(--accent-purple)" class="pulse-node" style="animation-delay: 0.5s"/>
-              <circle cx="50" cy="50" r="2" fill="#fff" class="pulse-node"/>
-              <path d="M30 40 Q50 50 70 60" fill="none" stroke="rgba(176,0,255,0.5)" stroke-width="0.5" stroke-dasharray="2,2"/>
-              <path d="M65 30 Q50 50 40 70" fill="none" stroke="rgba(0,240,255,0.5)" stroke-width="0.5" stroke-dasharray="2,2"/>
+              <ellipse cx="50" cy="50" rx="45" ry="15" fill="none" stroke="rgba(0,240,255,0.4)" stroke-width="0.5"/>
+              <ellipse cx="50" cy="50" rx="45" ry="30" fill="none" stroke="rgba(0,240,255,0.4)" stroke-width="0.5"/>
+              <ellipse cx="50" cy="50" rx="15" ry="45" fill="none" stroke="rgba(0,240,255,0.4)" stroke-width="0.5"/>
+              <ellipse cx="50" cy="50" rx="30" ry="45" fill="none" stroke="rgba(0,240,255,0.4)" stroke-width="0.5"/>
+              <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(0,240,255,0.8)" stroke-width="1" stroke-dasharray="4 4" animation="spin 10s linear infinite"/>
+              
+              <!-- Data streams / arcs -->
+              <path d="M10 50 A40 40 0 0 1 50 10" fill="none" stroke="rgba(176,0,255,0.8)" stroke-width="1" stroke-dasharray="2,5" class="pulse-node" style="animation-duration: 3s"/>
+              <path d="M90 50 A40 40 0 0 0 50 90" fill="none" stroke="rgba(176,0,255,0.8)" stroke-width="1" stroke-dasharray="2,5" class="pulse-node" style="animation-duration: 4s; animation-delay: 1s;"/>
+              
+              <!-- Inner neural nodes -->
+              <line x1="20" y1="50" x2="80" y2="50" stroke="rgba(0,240,255,0.3)" stroke-width="0.5"/>
+              <line x1="50" y1="20" x2="50" y2="80" stroke="rgba(0,240,255,0.3)" stroke-width="0.5"/>
+              <line x1="28.7" y1="28.7" x2="71.3" y2="71.3" stroke="rgba(0,240,255,0.3)" stroke-width="0.5"/>
+              <line x1="71.3" y1="28.7" x2="28.7" y2="71.3" stroke="rgba(0,240,255,0.3)" stroke-width="0.5"/>
+              
+              <circle cx="20" cy="50" r="2" fill="var(--accent-red)" class="pulse-node"/>
+              <circle cx="80" cy="50" r="2" fill="var(--accent-green)" class="pulse-node" style="animation-delay: 0.5s"/>
+              <circle cx="50" cy="20" r="2" fill="var(--accent-purple)" class="pulse-node" style="animation-delay: 1s"/>
+              <circle cx="50" cy="80" r="2" fill="var(--accent-green)" class="pulse-node" style="animation-delay: 1.5s"/>
+              <circle cx="28.7" cy="28.7" r="1.5" fill="var(--accent-green)" class="pulse-node" style="animation-delay: 0.2s"/>
+              <circle cx="71.3" cy="71.3" r="1.5" fill="var(--accent-purple)" class="pulse-node" style="animation-delay: 0.7s"/>
+              <circle cx="71.3" cy="28.7" r="1.5" fill="var(--accent-red)" class="pulse-node" style="animation-delay: 1.2s"/>
+              <circle cx="28.7" cy="71.3" r="1.5" fill="var(--accent-green)" class="pulse-node" style="animation-delay: 1.7s"/>
+              <circle cx="50" cy="50" r="3" fill="#fff" filter="drop-shadow(0 0 10px #fff)" class="pulse-node"/>
             </svg>
           </div>
           <div class="map-overlay">
