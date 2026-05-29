@@ -6,7 +6,6 @@ import { fetchRSSFeeds } from './fetchers/rss';
 import { normalizeEvents } from './pipeline/normalize';
 import { deduplicateEvents } from './pipeline/deduplicate';
 import { rankEvents } from './pipeline/rank';
-import { selectTopics } from './pipeline/select';
 import { generateContent } from './generation/generator';
 import { validateContent } from './generation/validator';
 import { savePost, logGeneration, getRecentSourceUrls } from './db/queries';
@@ -57,33 +56,46 @@ export default {
       
       console.log(`Pipeline yielded ${rankedEvents.length} unique ranked topics.`);
 
-      // 3. Topic Selection
-      const topics = selectTopics(rankedEvents);
+      // 3 & 4. Topic Selection & Generation with Fallback
+      let remainingEvents = [...rankedEvents];
+      const targetPostTypes = ['article', 'news', 'blog'] as const;
 
-      // 4. Generate & Validate Posts
-      const postTypes = [
-        { type: 'article' as const, events: topics.articleTopic },
-        { type: 'news' as const, events: topics.newsTopic },
-        { type: 'blog' as const, events: topics.blogTopic }
-      ];
-
-      for (const pt of postTypes) {
-        if (pt.events.length === 0) continue;
+      for (const pt of targetPostTypes) {
+        let successForType = false;
         
-        console.log(`Generating ${pt.type} post...`);
-        const generated = await generateContent(env, pt.events, pt.type);
-        
-        if (generated) {
-           const validation = validateContent(generated, pt.events, pt.type);
-           if (validation.isValid) {
-             const success = await savePost(env, { ...generated, type: pt.type }, pt.events);
-             if (success) {
-               postsCreated++;
-               console.log(`Successfully published ${pt.type} post.`);
+        while (!successForType && remainingEvents.length > 0) {
+           // Take the top event and its related CVE events
+           const candidate = remainingEvents[0];
+           const related = candidate.cve_id ? remainingEvents.filter(e => e.id !== candidate.id && e.cve_id === candidate.cve_id) : [];
+           const group = [candidate, ...related];
+           
+           // Remove these from remainingEvents pool
+           remainingEvents = remainingEvents.filter(e => !group.find(g => g.id === e.id));
+           
+           console.log(`Attempting to generate ${pt} post from ${group.length} events (Candidate: ${candidate.title})...`);
+           const generated = await generateContent(env, group, pt);
+           
+           if (generated) {
+             const validation = validateContent(generated, group, pt);
+             if (validation.isValid) {
+               const success = await savePost(env, { ...generated, type: pt }, group);
+               if (success) {
+                 postsCreated++;
+                 successForType = true;
+                 console.log(`Successfully published ${pt} post.`);
+               } else {
+                 console.error(`Failed to save ${pt} post to database.`);
+               }
+             } else {
+               console.warn(`Validation failed for ${pt}: ${validation.reason}. Trying next topic...`);
              }
            } else {
-             console.warn(`Validation failed for ${pt.type}: ${validation.reason}`);
+             console.warn(`AI failed to generate content for ${pt}. Trying next topic...`);
            }
+        }
+        
+        if (!successForType) {
+           console.warn(`Exhausted all events without successfully generating a ${pt} post.`);
         }
       }
 
