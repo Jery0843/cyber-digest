@@ -1,0 +1,138 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostGrid from '../../components/PostGrid.astro';
+import TagBadge from '../../components/TagBadge.astro';
+import type { Post, PostSource, PostWithTags } from '../../lib/types';
+import { getPostBySlug, getPostsByType } from '../../lib/db';
+
+const { slug } = Astro.params;
+import { getDB } from '../../lib/env';
+const db = getDB();
+
+if (!slug || !db) return Astro.redirect('/');
+
+const post = await getPostBySlug(db, slug);
+if (!post) return Astro.redirect('/');
+
+function formatDate(d: string) {
+  return new Date(d).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+}
+
+const relatedPosts = await getPostsByType(db, post.type, 3, 0);
+const related = relatedPosts.filter(p => p.slug !== post.slug).slice(0, 2);
+
+const siteUrl = 'https://cyberdigest.pages.dev';
+const jsonLd = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: post.title,
+  description: post.summary,
+  datePublished: post.published_at,
+  author: { '@type': 'Organization', name: 'CyberDigest' },
+  publisher: { '@type': 'Organization', name: 'CyberDigest' },
+  url: `${siteUrl}/post/${post.slug}`,
+  keywords: post.tags.join(', '),
+});
+---
+<BaseLayout
+  title={`${post.title} — CyberDigest`}
+  description={post.summary}
+  ogType="article"
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={jsonLd} />
+  </Fragment>
+
+  <article class="post-page" id={`post-${post.slug}`}>
+    <div class="container container--narrow">
+      <!-- Header -->
+      <header class="post-page__header animate-in">
+        <div class="post-page__meta">
+          <span class={`type-badge type-badge--${post.type}`}>{post.type}</span>
+          <time datetime={post.published_at}>{formatDate(post.published_at)}</time>
+        </div>
+        <h1 class="post-page__title">{post.title}</h1>
+        <p class="post-page__summary">{post.summary}</p>
+        {post.tags.length > 0 && (
+          <div class="post-page__tags">
+            {post.tags.map(t => <TagBadge name={t} />)}
+          </div>
+        )}
+      </header>
+
+      <!-- Info bar -->
+      <div class="post-page__info glass-card animate-in">
+        <div class="info-item">
+          <span class="info-label">Confidence</span>
+          <span class="info-value">{(post.confidence_score * 10).toFixed(0)}%</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Sources</span>
+          <span class="info-value">{post.source_count}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Model</span>
+          <span class="info-value info-value--mono">{post.model || 'AI'}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Event Date</span>
+          <span class="info-value">{post.event_date ? formatDate(post.event_date) : 'N/A'}</span>
+        </div>
+      </div>
+
+      <!-- Content -->
+      <div class="post-content animate-in" set:html={post.content} />
+
+      <!-- Sources -->
+      {post.sources.length > 0 && (
+        <div class="post-page__sources glass-card animate-in">
+          <h3 class="post-page__sources-title">📡 Sources</h3>
+          <ul class="post-page__sources-list">
+            {post.sources.map((s: PostSource) => (
+              <li>
+                <a href={s.source_url} target="_blank" rel="noopener noreferrer">{s.source_name}</a>
+                <span class="source-url">{new URL(s.source_url).hostname}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+
+    <!-- Related -->
+    {related.length > 0 && (
+      <section class="post-page__related">
+        <div class="container">
+          <div class="section-header">
+            <p class="section-header__label">Related</p>
+            <h2 class="section-header__title">More <span>{post.type} posts</span></h2>
+          </div>
+          <PostGrid posts={related} />
+        </div>
+      </section>
+    )}
+  </article>
+</BaseLayout>
+
+<style>
+.post-page{padding:var(--space-3xl) 0}
+.post-page__header{margin-bottom:var(--space-2xl)}
+.post-page__meta{display:flex;align-items:center;gap:var(--space-md);margin-bottom:var(--space-lg)}
+.post-page__meta time{font-family:var(--font-mono);font-size:var(--text-sm);color:var(--text-muted)}
+.post-page__title{font-size:var(--text-4xl);font-weight:900;line-height:1.15;letter-spacing:-0.02em;margin-bottom:var(--space-md)}
+.post-page__summary{font-size:var(--text-lg);color:var(--text-secondary);line-height:1.7;max-width:700px}
+.post-page__tags{display:flex;flex-wrap:wrap;gap:var(--space-sm);margin-top:var(--space-lg)}
+.post-page__info{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-md);padding:var(--space-lg);margin-bottom:var(--space-2xl)}
+.info-item{display:flex;flex-direction:column;align-items:center;gap:0.2rem;text-align:center}
+.info-label{font-family:var(--font-mono);font-size:var(--text-xs);color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em}
+.info-value{font-size:var(--text-lg);font-weight:700;color:var(--accent-green)}
+.info-value--mono{font-family:var(--font-mono);font-size:var(--text-xs)}
+.post-page__sources{padding:var(--space-xl);margin-top:var(--space-2xl)}
+.post-page__sources-title{font-size:var(--text-lg);font-weight:700;margin-bottom:var(--space-md);color:var(--accent-green)}
+.post-page__sources-list{list-style:none;padding:0;display:flex;flex-direction:column;gap:var(--space-sm)}
+.post-page__sources-list li{display:flex;justify-content:space-between;align-items:center;padding:var(--space-sm) var(--space-md);background:rgba(0,0,0,0.2);border-radius:var(--radius-md);font-size:var(--text-sm)}
+.post-page__sources-list a{color:var(--text-primary);font-weight:500}
+.source-url{font-family:var(--font-mono);font-size:var(--text-xs);color:var(--text-muted)}
+.post-page__related{padding:var(--space-3xl) 0;border-top:1px solid var(--border-subtle);margin-top:var(--space-3xl)}
+@media(max-width:640px){.post-page__info{grid-template-columns:repeat(2,1fr)}}
+</style>

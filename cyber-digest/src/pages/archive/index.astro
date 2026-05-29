@@ -1,0 +1,70 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostGrid from '../../components/PostGrid.astro';
+import { getArchiveDates, getPostsByDate } from '../../lib/db';
+
+import { getDB } from '../../lib/env';
+const db = getDB();
+let archiveDates: { date: string; count: number }[] = [];
+let selectedDate = Astro.url.searchParams.get('date') || '';
+let datePosts: any[] = [];
+
+if (db) {
+  archiveDates = await getArchiveDates(db);
+  if (!selectedDate && archiveDates.length > 0) {
+    selectedDate = archiveDates[0].date;
+  }
+  if (selectedDate) {
+    datePosts = await getPostsByDate(db, selectedDate);
+  }
+}
+
+function formatArchiveDate(d: string) {
+  return new Date(d + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+}
+---
+<BaseLayout title="Archive — CyberDigest" description="Browse all cybersecurity posts by date.">
+  <section class="page-content">
+    <div class="container">
+      <div class="section-header animate-in">
+        <p class="section-header__label">▤ Archive</p>
+        <h1 class="section-header__title">Post <span>Archive</span></h1>
+        <p class="page-desc">Browse all published posts by date.</p>
+      </div>
+      <div class="archive-layout">
+        <aside class="archive-sidebar glass-card">
+          <h3 class="archive-sidebar__title">Dates</h3>
+          <ul class="archive-dates">
+            {archiveDates.map(d => (
+              <li>
+                <a href={`/archive?date=${d.date}`} class:list={['archive-date', { 'archive-date--active': d.date === selectedDate }]}>
+                  <span>{formatArchiveDate(d.date)}</span>
+                  <span class="archive-date__count">{d.count}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+          {archiveDates.length === 0 && <p class="archive-empty">No dates yet.</p>}
+        </aside>
+        <div class="archive-main">
+          {selectedDate && <h2 class="archive-main__date">{formatArchiveDate(selectedDate)}</h2>}
+          <PostGrid posts={datePosts} emptyMessage="No posts for this date." />
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+<style>
+.page-desc{color:var(--text-secondary);font-size:var(--text-sm);margin-top:var(--space-sm)}
+.archive-layout{display:grid;grid-template-columns:280px 1fr;gap:var(--space-xl);align-items:start}
+.archive-sidebar{padding:var(--space-lg);position:sticky;top:calc(var(--nav-height) + var(--space-lg))}
+.archive-sidebar__title{font-family:var(--font-mono);font-size:var(--text-xs);text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);margin-bottom:var(--space-md)}
+.archive-dates{list-style:none;padding:0;display:flex;flex-direction:column;gap:var(--space-xs)}
+.archive-date{display:flex;justify-content:space-between;align-items:center;padding:var(--space-sm) var(--space-md);border-radius:var(--radius-md);font-size:var(--text-sm);color:var(--text-secondary);transition:all var(--transition-fast)}
+.archive-date:hover{background:rgba(255,255,255,0.05);color:var(--text-primary)}
+.archive-date--active{background:var(--accent-green-dim);color:var(--accent-green)}
+.archive-date__count{font-family:var(--font-mono);font-size:var(--text-xs);color:var(--text-muted);background:rgba(0,0,0,0.3);padding:0.1rem 0.4rem;border-radius:var(--radius-full)}
+.archive-main__date{font-size:var(--text-xl);font-weight:700;margin-bottom:var(--space-xl);color:var(--accent-green)}
+.archive-empty{color:var(--text-muted);font-size:var(--text-sm);padding:var(--space-md)}
+@media(max-width:768px){.archive-layout{grid-template-columns:1fr}.archive-sidebar{position:static}}
+</style>

@@ -1,0 +1,29 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostGrid from '../../components/PostGrid.astro';
+import { getPostsByType, getPostCountByType } from '../../lib/db';
+
+import { getDB } from '../../lib/env';
+const db = getDB();
+let posts = [];
+let total = 0;
+if (db) {
+  posts = await getPostsByType(db, 'news', 30);
+  total = await getPostCountByType(db, 'news');
+}
+---
+<BaseLayout title="Daily News — CyberDigest" description="Short, concise cybersecurity news updates published daily.">
+  <section class="page-content">
+    <div class="container">
+      <div class="section-header animate-in">
+        <p class="section-header__label">◈ Daily Updates</p>
+        <h1 class="section-header__title">Cyber <span>News</span></h1>
+        <p class="page-desc">Short, concise cybersecurity updates — one per day. {total} posts total.</p>
+      </div>
+      <PostGrid posts={posts} emptyMessage="No news posts yet. The daily cron will publish the first batch soon." />
+    </div>
+  </section>
+</BaseLayout>
+<style>
+.page-desc{color:var(--text-secondary);font-size:var(--text-sm);margin-top:var(--space-sm)}
+</style>

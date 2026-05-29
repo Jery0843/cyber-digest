@@ -1,0 +1,29 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostGrid from '../../components/PostGrid.astro';
+import { getPostsByTag } from '../../lib/db';
+
+const { tag } = Astro.params;
+import { getDB } from '../../lib/env';
+const db = getDB();
+let posts = [];
+
+if (db && tag) {
+  posts = await getPostsByTag(db, decodeURIComponent(tag), 30);
+}
+---
+<BaseLayout title={`${tag} — CyberDigest`} description={`All cybersecurity posts tagged with ${tag}.`}>
+  <section class="page-content">
+    <div class="container">
+      <div class="section-header animate-in">
+        <p class="section-header__label"># Tag</p>
+        <h1 class="section-header__title">Posts tagged <span>"{tag}"</span></h1>
+        <p class="page-desc">{posts.length} post{posts.length !== 1 ? 's' : ''} found.</p>
+      </div>
+      <PostGrid posts={posts} emptyMessage={`No posts tagged "${tag}" found.`} />
+    </div>
+  </section>
+</BaseLayout>
+<style>
+.page-desc{color:var(--text-secondary);font-size:var(--text-sm);margin-top:var(--space-sm)}
+</style>

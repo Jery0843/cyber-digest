@@ -1,0 +1,21 @@
+---
+import PostCard from './PostCard.astro';
+import type { Post } from '../lib/types';
+
+interface Props {
+  posts: Post[];
+  emptyMessage?: string;
+}
+const { posts, emptyMessage = 'No posts found.' } = Astro.props;
+---
+{posts.length > 0 ? (
+  <div class="post-grid">
+    {posts.map(post => <PostCard post={post} />)}
+  </div>
+) : (
+  <div class="empty-state">
+    <div class="empty-state__icon">🛡️</div>
+    <h3 class="empty-state__title">{emptyMessage}</h3>
+    <p class="empty-state__text">Check back soon for the latest cybersecurity intelligence.</p>
+  </div>
+)}

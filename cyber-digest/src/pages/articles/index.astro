@@ -1,0 +1,29 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostGrid from '../../components/PostGrid.astro';
+import { getPostsByType, getPostCountByType } from '../../lib/db';
+
+import { getDB } from '../../lib/env';
+const db = getDB();
+let posts = [];
+let total = 0;
+if (db) {
+  posts = await getPostsByType(db, 'article', 30);
+  total = await getPostCountByType(db, 'article');
+}
+---
+<BaseLayout title="In-Depth Articles — CyberDigest" description="Deep analysis articles covering major cybersecurity threats and vulnerabilities.">
+  <section class="page-content">
+    <div class="container">
+      <div class="section-header animate-in">
+        <p class="section-header__label">◆ Deep Analysis</p>
+        <h1 class="section-header__title">Security <span>Articles</span></h1>
+        <p class="page-desc">In-depth analysis of critical cybersecurity events. {total} posts total.</p>
+      </div>
+      <PostGrid posts={posts} emptyMessage="No articles yet. The daily cron will publish the first batch soon." />
+    </div>
+  </section>
+</BaseLayout>
+<style>
+.page-desc{color:var(--text-secondary);font-size:var(--text-sm);margin-top:var(--space-sm)}
+</style>

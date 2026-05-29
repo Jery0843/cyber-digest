@@ -1,0 +1,58 @@
+---
+const currentPath = Astro.url.pathname;
+const navLinks = [
+  { href: '/', label: 'Home', icon: '⌂' },
+  { href: '/news', label: 'News', icon: '◈' },
+  { href: '/blog', label: 'Blog', icon: '◉' },
+  { href: '/articles', label: 'Articles', icon: '◆' },
+  { href: '/archive', label: 'Archive', icon: '▤' },
+];
+---
+<nav class="navbar" id="main-nav">
+  <div class="navbar__inner container">
+    <a href="/" class="navbar__brand" id="nav-brand">
+      <span class="navbar__logo">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+          <path d="M14 2L26 8v12l-12 6L2 20V8l12-6z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+          <circle cx="14" cy="14" r="3" fill="var(--accent-green)" opacity="0.8"/>
+        </svg>
+      </span>
+      <span class="navbar__name"><span class="navbar__name-cyber">Cyber</span><span class="navbar__name-digest">Digest</span></span>
+    </a>
+    <div class="navbar__links" id="nav-links">
+      {navLinks.map(link => (
+        <a href={link.href} class:list={['navbar__link', { 'navbar__link--active': currentPath === link.href || (link.href !== '/' && currentPath.startsWith(link.href)) }]} id={`nav-${link.label.toLowerCase()}`}>
+          <span class="navbar__link-icon">{link.icon}</span>
+          {link.label}
+        </a>
+      ))}
+    </div>
+    <a href="/rss.xml" class="navbar__rss" title="RSS Feed" id="nav-rss">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><circle cx="3" cy="13" r="2"/><path d="M1 1a14 14 0 0 1 14 14h-3A11 11 0 0 0 1 4V1z"/><path d="M1 5a10 10 0 0 1 10 10h-3A7 7 0 0 0 1 8V5z"/></svg>
+    </a>
+    <button class="navbar__toggle" id="nav-toggle" aria-label="Toggle navigation"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<style>
+.navbar{position:sticky;top:0;z-index:100;height:var(--nav-height);background:rgba(6,10,19,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border-subtle)}
+.navbar__inner{display:flex;align-items:center;justify-content:space-between;height:100%;gap:var(--space-xl)}
+.navbar__brand{display:flex;align-items:center;gap:var(--space-sm);color:var(--text-primary);text-decoration:none;flex-shrink:0}
+.navbar__brand:hover{color:var(--text-primary)}
+.navbar__logo{color:var(--accent-green);display:flex;align-items:center}
+.navbar__name{font-size:var(--text-lg);font-weight:700;letter-spacing:-0.02em}
+.navbar__name-cyber{color:var(--accent-green)}
+.navbar__name-digest{color:var(--text-primary)}
+.navbar__links{display:flex;align-items:center;gap:var(--space-xs)}
+.navbar__link{display:flex;align-items:center;gap:0.35rem;padding:var(--space-sm) var(--space-md);border-radius:var(--radius-md);font-size:var(--text-sm);font-weight:500;color:var(--text-secondary);transition:all var(--transition-fast)}
+.navbar__link:hover{color:var(--text-primary);background:rgba(255,255,255,0.05)}
+.navbar__link--active{color:var(--accent-green);background:var(--accent-green-dim)}
+.navbar__link-icon{font-size:0.7rem;opacity:0.7}
+.navbar__rss{color:var(--text-muted);padding:var(--space-sm);border-radius:var(--radius-md);transition:all var(--transition-fast);display:flex;align-items:center}
+.navbar__rss:hover{color:var(--accent-green);background:var(--accent-green-dim)}
+.navbar__toggle{display:none;flex-direction:column;gap:4px;padding:var(--space-sm);background:none;border:none;cursor:pointer}
+.navbar__toggle span{display:block;width:20px;height:2px;background:var(--text-secondary);border-radius:1px;transition:all var(--transition-fast)}
+@media(max-width:768px){.navbar__toggle{display:flex}.navbar__links{display:none;position:absolute;top:var(--nav-height);left:0;right:0;flex-direction:column;background:var(--bg-secondary);border-bottom:1px solid var(--border-subtle);padding:var(--space-md);gap:var(--space-xs)}.navbar__links.open{display:flex}.navbar__link{width:100%;padding:var(--space-md)}}
+</style>
+<script>
+const toggle=document.getElementById('nav-toggle');const links=document.getElementById('nav-links');if(toggle&&links){toggle.addEventListener('click',()=>{links.classList.toggle('open')})}
+</script>

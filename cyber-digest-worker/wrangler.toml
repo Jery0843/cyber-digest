@@ -1,0 +1,14 @@
+name = "cyber-digest-worker"
+main = "src/index.ts"
+compatibility_date = "2026-05-29"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "cyber_daily"
+database_id = "d269b677-ba44-4335-aba7-e1fb9c3cbd23"
+
+[ai]
+binding = "AI"
+
+[triggers]
+crons = ["0 2 * * *"]
