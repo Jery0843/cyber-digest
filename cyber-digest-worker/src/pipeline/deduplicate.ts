@@ -1,5 +1,21 @@
 import type { CyberEvent } from '../types';
 
+function calculateWordOverlap(title1: string, title2: string): number {
+  const getWords = (t: string) => new Set(t.toLowerCase().replace(/[^a-z0-9\s]/g, '').split(/\s+/).filter(w => w.length > 3));
+  const set1 = getWords(title1);
+  const set2 = getWords(title2);
+  
+  if (set1.size === 0 || set2.size === 0) return 0;
+  
+  let intersection = 0;
+  for (const word of set1) {
+    if (set2.has(word)) intersection++;
+  }
+  
+  const minSize = Math.min(set1.size, set2.size);
+  return intersection / minSize;
+}
+
 export function deduplicateEvents(events: CyberEvent[]): CyberEvent[] {
   const deduplicated: CyberEvent[] = [];
   const seenUrls = new Set<string>();
@@ -23,25 +39,19 @@ export function deduplicateEvents(events: CyberEvent[]): CyberEvent[] {
     // Dedupe by CVE ID (if present)
     if (event.cve_id) {
       if (seenCves.has(event.cve_id)) {
-        // If we already have this CVE, we might want to merge sources later.
-        // For now, we just skip it because we sorted by severity and kept the best one.
         continue;
       }
       seenCves.add(event.cve_id);
     }
 
-    // Fuzzy title deduplication (very basic)
-    const normalizedTitle = event.title.toLowerCase().replace(/[^a-z0-9]/g, '');
+    // Stronger fuzzy title deduplication using word overlap
     let isFuzzyDuplicate = false;
     for (const existing of deduplicated) {
-       const existingNormalized = existing.title.toLowerCase().replace(/[^a-z0-9]/g, '');
-       
-       // If strings are very similar in length and one contains the other, consider it a duplicate
-       if (normalizedTitle.length > 20 && existingNormalized.length > 20) {
-           if (normalizedTitle.includes(existingNormalized) || existingNormalized.includes(normalizedTitle)) {
-               isFuzzyDuplicate = true;
-               break;
-           }
+       // If 60% of significant words match, it's highly likely reporting the same event
+       const overlap = calculateWordOverlap(event.title, existing.title);
+       if (overlap > 0.6) {
+           isFuzzyDuplicate = true;
+           break;
        }
     }
 

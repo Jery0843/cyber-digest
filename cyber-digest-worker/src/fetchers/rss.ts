@@ -6,10 +6,66 @@ interface FeedConfig {
 }
 
 const FEEDS: FeedConfig[] = [
+  // Top News
   { url: 'https://krebsonsecurity.com/feed/', name: 'Krebs on Security' },
   { url: 'https://www.bleepingcomputer.com/feed/', name: 'BleepingComputer' },
   { url: 'https://thehackernews.com/feeds/posts/default', name: 'The Hacker News' },
-  { url: 'https://isc.sans.edu/rssfeed.xml', name: 'SANS Internet Storm Center' }
+  { url: 'https://www.darkreading.com/rss.xml', name: 'Dark Reading' },
+  { url: 'https://www.securityweek.com/feed/', name: 'SecurityWeek' },
+  { url: 'https://cyware.com/rss-feed/', name: 'Cyware Hacker News' },
+  { url: 'https://www.schneier.com/blog/atom.xml', name: 'Schneier on Security' },
+  { url: 'https://news.ycombinator.com/rss', name: 'Hacker News (YCombinator)' },
+  { url: 'https://www.threatintel.academy/feed/', name: 'Threat Intel Academy' },
+  
+  // Threat Intel & Vulnerability Data
+  { url: 'https://isc.sans.edu/rssfeed.xml', name: 'SANS Internet Storm Center' },
+  { url: 'https://www.cisa.gov/cybersecurity-advisories/all.xml', name: 'CISA Cybersecurity Advisories' },
+  { url: 'https://securelist.com/feed/', name: 'Kaspersky Securelist' },
+  { url: 'https://threatpost.com/feed/', name: 'Threatpost' },
+  { url: 'https://www.trendmicro.com/vinfo/us/rss/security', name: 'Trend Micro Security News' },
+  { url: 'https://www.symantec.com/connect/item-feeds/blog/2261/feed/all/en/all', name: 'Symantec Security' },
+  { url: 'https://www.crowdstrike.com/blog/feed/', name: 'CrowdStrike Blog' },
+  { url: 'https://www.fireeye.com/blog/threat-research/_jcr_content.feed', name: 'FireEye Threat Research' },
+  { url: 'https://paloaltonetworks.com/blog/feed/', name: 'Palo Alto Networks' },
+  { url: 'https://research.checkpoint.com/feed/', name: 'Check Point Research' },
+  { url: 'https://www.mcafee.com/blogs/feed/', name: 'McAfee Labs' },
+  
+  // Niche / General Cybersecurity Blogs
+  { url: 'https://www.nakedsecurity.sophos.com/feed/', name: 'Naked Security' },
+  { url: 'https://www.grahamcluley.com/feed/', name: 'Graham Cluley' },
+  { url: 'https://www.troyhunt.com/rss/', name: 'Troy Hunt' },
+  { url: 'https://portswigger.net/daily-swig/rss', name: 'The Daily Swig' },
+  { url: 'https://www.helpnetsecurity.com/feed/', name: 'Help Net Security' },
+  { url: 'https://www.cybersecuritydive.com/feeds/news/', name: 'Cybersecurity Dive' },
+  { url: 'https://www.csoonline.com/feed', name: 'CSO Online' },
+  { url: 'https://www.infosecurity-magazine.com/rss/news/', name: 'Infosecurity Magazine' },
+  { url: 'https://www.scmagazine.com/rss/', name: 'SC Magazine' },
+  { url: 'https://www.ehackingnews.com/feeds/posts/default', name: 'E-Hacking News' },
+  { url: 'https://gbhackers.com/feed/', name: 'GBHackers On Security' },
+  { url: 'https://latesthackingnews.com/feed/', name: 'Latest Hacking News' },
+  { url: 'https://securityaffairs.co/wordpress/feed', name: 'Security Affairs' },
+  { url: 'https://www.welivesecurity.com/feed/', name: 'WeLiveSecurity' },
+  { url: 'https://blogs.quickheal.com/feed/', name: 'Quick Heal Blog' },
+  { url: 'https://blog.malwarebytes.com/feed/', name: 'Malwarebytes Labs' },
+  { url: 'https://www.tenable.com/blog/feed', name: 'Tenable Blog' },
+  { url: 'https://www.rapid7.com/blog/feed', name: 'Rapid7 Blog' },
+  { url: 'https://blog.qualys.com/feed', name: 'Qualys Security Blog' },
+  { url: 'https://www.proofpoint.com/us/threat-insight/feed', name: 'Proofpoint Threat Insight' },
+  { url: 'https://www.fortinet.com/blog/threat-research/rss', name: 'Fortinet Threat Research' },
+  { url: 'https://blogs.cisco.com/security/feed', name: 'Cisco Security Blog' },
+  { url: 'https://www.f5.com/labs/rss.xml', name: 'F5 Labs' },
+  { url: 'https://blog.cloudflare.com/tag/security/rss/', name: 'Cloudflare Security Blog' },
+  { url: 'https://www.akamai.com/blog/feed/security', name: 'Akamai Security' },
+  { url: 'https://www.digitalshadows.com/blog-and-research/feed/', name: 'Digital Shadows' },
+  { url: 'https://www.mandiant.com/resources/blog/rss.xml', name: 'Mandiant Blog' },
+  { url: 'https://www.recordedfuture.com/feed/', name: 'Recorded Future' },
+  { url: 'https://unit42.paloaltonetworks.com/feed/', name: 'Unit 42' },
+  { url: 'https://www.zscaler.com/blogs/security-research/rss.xml', name: 'Zscaler Security Research' },
+  { url: 'https://thedfirreport.com/feed/', name: 'The DFIR Report' },
+  { url: 'https://blog.talosintelligence.com/feeds/posts/default', name: 'Cisco Talos' },
+  { url: 'https://www.dragos.com/blog/feed/', name: 'Dragos Blog' },
+  { url: 'https://www.cyberark.com/resources/threat-research-blog/feed', name: 'CyberArk Threat Research' },
+  { url: 'https://www.varonis.com/blog/rss.xml', name: 'Varonis Security Blog' }
 ];
 
 export async function fetchRSSFeeds(): Promise<CyberEvent[]> {
