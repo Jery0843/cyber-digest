@@ -83,7 +83,7 @@ function sidebar(currentPath: string): string {
 }
 
 function layout(options: { title?: string; description?: string; path?: string; ogType?: string; head?: string; body: string }): string {
-  const title = options.title ?? 'CyberDigest — Daily Cybersecurity Intelligence';
+  const title = options.title ?? 'CyberDigest - Daily Cybersecurity Intelligence';
   const description = options.description ?? 'Automated daily cybersecurity news, educational blogs, and in-depth threat analysis. Powered by trusted sources and AI.';
   const canonical = `${siteUrl}${options.path ?? '/'}`;
   return `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="${escapeAttr(description)}"><meta name="theme-color" content="#030509"><title>${escapeHtml(title)}</title><link rel="canonical" href="${escapeAttr(canonical)}"><meta property="og:title" content="${escapeAttr(title)}"><meta property="og:description" content="${escapeAttr(description)}"><meta property="og:type" content="${escapeAttr(options.ogType ?? 'website')}"><meta property="og:url" content="${escapeAttr(canonical)}"><meta property="og:site_name" content="CyberDigest"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${escapeAttr(title)}"><meta name="twitter:description" content="${escapeAttr(description)}"><link rel="alternate" type="application/rss+xml" title="CyberDigest RSS" href="/rss.xml"><link rel="icon" type="image/png" href="/favicon.png"><link rel="manifest" href="/manifest.json"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet"><link rel="stylesheet" href="/styles/site.css">${options.head ?? ''}</head><body class="dashboard-body"><div class="dashboard-layout">${sidebar(options.path ?? '/')} <main class="dashboard-main">${options.body}</main></div><script>if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('/sw.js'); }); }</script></body></html>`;
@@ -212,7 +212,7 @@ async function listingPage(c: Context<HonoEnv>, type: PostType, title: string, l
     safePosts(() => getPostCountByType(c.env.DB, type), 0),
   ]);
   return c.html(layout({
-    title: `${title} — CyberDigest`,
+    title: `${title} - CyberDigest`,
     description,
     path: `/${type === 'article' ? 'articles' : type}`,
     body: `
@@ -244,7 +244,7 @@ app.get('/post/:slug', async (c) => {
   const sources = post.sources.length ? `<div class="post-page__sources glass-card animate-in"><h3 class="post-page__sources-title">Sources</h3><ul class="post-page__sources-list">${post.sources.map((source: PostSource) => `<li><a href="${escapeAttr(source.source_url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(source.source_name)}</a><span class="source-url">${escapeHtml(new URL(source.source_url).hostname)}</span></li>`).join('')}</ul></div>` : '';
   const relatedSection = related.length ? `<section class="post-page__related"><div class="container"><div class="section-header"><p class="section-header__label">Related</p><h2 class="section-header__title">More <span>${escapeHtml(post.type)} posts</span></h2></div>${postGrid(related, '')}</div></section>` : '';
   return c.html(layout({
-    title: `${post.title} — CyberDigest`,
+    title: `${post.title} - CyberDigest`,
     description: post.summary,
     path: `/post/${post.slug}`,
     ogType: 'article',
