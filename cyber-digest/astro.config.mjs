@@ -6,9 +6,7 @@ import cloudflare from '@astrojs/cloudflare';
 export default defineConfig({
   output: 'server',
   adapter: cloudflare({
-    platformProxy: {
-      enabled: false,
-    },
+    remoteBindings: false,
   }),
   site: 'https://cyberdigest.pages.dev',
 });
