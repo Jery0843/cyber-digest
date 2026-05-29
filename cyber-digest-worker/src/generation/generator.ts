@@ -34,7 +34,7 @@ export async function generateContent(env: Env, events: CyberEvent[], type: 'new
   }
 
   const userPrompt = buildSourceDataString(events);
-  
+
   console.log(`Generating ${type} with ${events.length} sources using ${MODEL}`);
 
   // Retry logic for malformed JSON
@@ -51,7 +51,7 @@ export async function generateContent(env: Env, events: CyberEvent[], type: 'new
         ],
         max_tokens: maxTokens,
         temperature: 0.2,
-        response_format: { type: "json_object" } 
+        response_format: { type: "json_object" }
       });
 
       console.log('Workers AI raw response type:', typeof response);
@@ -59,7 +59,7 @@ export async function generateContent(env: Env, events: CyberEvent[], type: 'new
       console.log('Workers AI raw response:', JSON.stringify(response));
 
       let parsed: GeneratedContent;
-      
+
       if (response && typeof response === 'object') {
         const aiResp = (response as any).response;
         if (aiResp && typeof aiResp === 'object') {
@@ -76,10 +76,10 @@ export async function generateContent(env: Env, events: CyberEvent[], type: 'new
       } else {
         throw new Error('Unexpected response format from Workers AI');
       }
-      
+
       // Basic structural validation
       if (!parsed.title || !parsed.content || !parsed.summary || typeof parsed.confidence_score !== 'number') {
-         throw new Error('JSON missing required fields');
+        throw new Error('JSON missing required fields');
       }
 
       return parsed;
