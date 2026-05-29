@@ -190,7 +190,7 @@ app.get('/', async (c) => {
               <span class="metric-lbl">24H ALERTS</span>
             </div>
             <div class="map-metric">
-              <span class="metric-val">4</span>
+              <span class="metric-val">128</span>
               <span class="metric-lbl">DATA STREAMS</span>
             </div>
           </div>
