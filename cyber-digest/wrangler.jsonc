@@ -3,7 +3,6 @@
 	"compatibility_flags": ["global_fetch_strictly_public"],
 	"name": "cyber-digest",
 	"pages_build_output_dir": "./dist",
-	"main": "@astrojs/cloudflare/entrypoints/server",
 	"d1_databases": [
 		{
 			"binding": "DB",
