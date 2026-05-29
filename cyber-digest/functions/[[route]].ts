@@ -236,7 +236,7 @@ app.get('/post/:slug', async (c) => {
     ogType: 'article',
     head: `<script type="application/ld+json">${jsonLd}</script>`,
     body: `
-      <div class="dashboard-content-area dashboard-content-area--post">
+      <div class="dashboard-content-area">
         <article class="post-page animate-in">
           <header class="post-page__header">
             <div class="post-page__meta">${typeBadge(post.type)}<time datetime="${escapeAttr(post.published_at)}">${formatDate(post.published_at, true)}</time></div>
@@ -244,12 +244,7 @@ app.get('/post/:slug', async (c) => {
             <p class="post-page__summary">${escapeHtml(post.summary)}</p>
             ${post.tags.length ? `<div class="post-page__tags">${post.tags.map(tagBadge).join('')}</div>` : ''}
           </header>
-          <div class="post-page__info animate-in">
-            <div class="info-item"><span class="info-label">Confidence</span><span class="info-value">${(Number(post.confidence_score) * 10).toFixed(0)}%</span></div>
-            <div class="info-item"><span class="info-label">Sources</span><span class="info-value">${post.source_count}</span></div>
-            <div class="info-item"><span class="info-label">Model</span><span class="info-value info-value--mono">${escapeHtml(post.model || 'AI')}</span></div>
-            <div class="info-item"><span class="info-label">Event Date</span><span class="info-value">${formatDate(post.event_date, true)}</span></div>
-          </div>
+
           <div class="post-content animate-in">${post.content}</div>
           ${sources}
         </article>
