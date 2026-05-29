@@ -10,7 +10,7 @@ export interface GeneratedContent {
 }
 
 // Ensure we use a model that supports structured JSON output and large context
-const MODEL = '@cf/meta/llama-4-scout-17b-16e-instruct';
+const MODEL = '@cf/meta/llama-3.3-70b-instruct-awq';
 
 export async function generateContent(env: Env, events: CyberEvent[], type: 'news' | 'blog' | 'article'): Promise<GeneratedContent | null> {
   if (!events || events.length === 0) return null;

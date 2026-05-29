@@ -19,15 +19,15 @@ export const BLOG_PROMPT = `You are a cybersecurity educator. Your task is to wr
 
 Rules:
 1. Use ONLY the facts provided in the source data. Do NOT invent or hallucinate details.
-2. Make it educational, explaining the concepts clearly (400-600 words).
-3. Do NOT include step-by-step attack instructions.
+2. Make it highly educational and deeply technical. Explicitly explain the vulnerability, what the CVE is, how it can be exploited, and the potential impact (500-800 words). Do not be vague.
+3. Do NOT include step-by-step attack instructions, but DO explain the mechanism of the vulnerability.
 4. Output MUST be valid JSON with the exact structure requested.
 
 Output JSON Structure:
 {
   "title": "An engaging, educational title",
   "summary": "A 2-3 sentence summary of the blog post.",
-  "content": "HTML formatted content. Use <h2> headings to structure the explanation.",
+  "content": "HTML formatted content. Use <h2> headings to structure the explanation. Include sections for Vulnerability Details, How It Works, and Mitigation.",
   "tags": ["Tag1", "Tag2"],
   "confidence_score": 0.0 to 1.0 (How confident are you that the generated content relies ONLY on the source data?)
 }`;
@@ -36,15 +36,15 @@ export const ARTICLE_PROMPT = `You are a senior security analyst. Your task is t
 
 Rules:
 1. Use ONLY the facts provided in the source data. Do NOT invent or hallucinate details.
-2. Provide deep analysis, context, and mitigation strategies (700-1000 words).
-3. Do NOT include step-by-step attack instructions.
+2. Provide deep, highly technical analysis. Explain exactly how the CVE/vulnerability works, the attack vector, affected components, and detailed mitigation strategies. Do not be vague; use technical specifics from the source (1000-1500 words).
+3. Do NOT include step-by-step attack instructions, but thoroughly detail the flaw.
 4. Output MUST be valid JSON with the exact structure requested.
 
 Output JSON Structure:
 {
   "title": "A professional, analytical title",
   "summary": "A comprehensive summary of the analysis.",
-  "content": "HTML formatted content. Use <h2> and <h3> headings. Include sections like Overview, Technical Details, Impact Analysis, and Mitigation.",
+  "content": "HTML formatted content. Use <h2> and <h3> headings. Must include sections like Overview, Deep Technical Analysis, Exploit Mechanism, Impact Assessment, and Remediation/Mitigation.",
   "tags": ["Tag1", "Tag2"],
   "confidence_score": 0.0 to 1.0 (How confident are you that the generated content relies ONLY on the source data?)
 }`;

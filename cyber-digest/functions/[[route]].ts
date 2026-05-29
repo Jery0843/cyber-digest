@@ -150,7 +150,23 @@ app.get('/', async (c) => {
     body: `
       <div class="dashboard-center">
         <div class="holographic-map">
-          <div class="map-globe"></div>
+          <div class="map-globe">
+            <svg viewBox="0 0 100 100" class="globe-svg">
+              <ellipse cx="50" cy="50" rx="45" ry="15" fill="none" stroke="rgba(0,240,255,0.3)" stroke-width="0.5"/>
+              <ellipse cx="50" cy="50" rx="45" ry="30" fill="none" stroke="rgba(0,240,255,0.3)" stroke-width="0.5"/>
+              <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(0,240,255,0.5)" stroke-width="1"/>
+              <ellipse cx="50" cy="50" rx="15" ry="45" fill="none" stroke="rgba(0,240,255,0.3)" stroke-width="0.5"/>
+              <ellipse cx="50" cy="50" rx="30" ry="45" fill="none" stroke="rgba(0,240,255,0.3)" stroke-width="0.5"/>
+              <line x1="50" y1="5" x2="50" y2="95" stroke="rgba(0,240,255,0.3)" stroke-width="0.5"/>
+              <circle cx="30" cy="40" r="1.5" fill="var(--accent-purple)" class="pulse-node"/>
+              <circle cx="70" cy="60" r="1.5" fill="var(--accent-green)" class="pulse-node"/>
+              <circle cx="65" cy="30" r="1.5" fill="var(--accent-green)" class="pulse-node" style="animation-delay: 1s"/>
+              <circle cx="40" cy="70" r="1.5" fill="var(--accent-purple)" class="pulse-node" style="animation-delay: 0.5s"/>
+              <circle cx="50" cy="50" r="2" fill="#fff" class="pulse-node"/>
+              <path d="M30 40 Q50 50 70 60" fill="none" stroke="rgba(176,0,255,0.5)" stroke-width="0.5" stroke-dasharray="2,2"/>
+              <path d="M65 30 Q50 50 40 70" fill="none" stroke="rgba(0,240,255,0.5)" stroke-width="0.5" stroke-dasharray="2,2"/>
+            </svg>
+          </div>
           <div class="map-overlay">
              <div class="hero__status"><span class="hero__pulse"></span><span class="hero__status-text">SYSTEM ACTIVE</span></div>
              <h1>GLOBAL THREAT LANDSCAPE</h1>
