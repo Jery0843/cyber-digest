@@ -9,43 +9,43 @@
 /* --- Custom Properties --- */
 :root {
   /* Core colors */
-  --bg-primary: #060a13;
-  --bg-secondary: #0c1220;
-  --bg-tertiary: #111827;
-  --bg-card: rgba(12, 18, 32, 0.8);
-  --bg-card-hover: rgba(17, 24, 39, 0.95);
-  --bg-glass: rgba(12, 18, 32, 0.6);
+  --bg-primary: #02040a;
+  --bg-secondary: #0a0d1a;
+  --bg-tertiary: #14182b;
+  --bg-card: rgba(16, 21, 40, 0.4);
+  --bg-card-hover: rgba(24, 30, 54, 0.7);
+  --bg-glass: rgba(16, 21, 40, 0.3);
 
   /* Accent palette */
-  --accent-green: #00ff9f;
-  --accent-green-dim: rgba(0, 255, 159, 0.15);
-  --accent-green-glow: rgba(0, 255, 159, 0.3);
-  --accent-purple: #7c3aed;
-  --accent-purple-dim: rgba(124, 58, 237, 0.15);
+  --accent-green: #00f0ff; /* Reusing var name but it's cyan now */
+  --accent-green-dim: rgba(0, 240, 255, 0.15);
+  --accent-green-glow: rgba(0, 240, 255, 0.4);
+  --accent-purple: #b000ff;
+  --accent-purple-dim: rgba(176, 0, 255, 0.15);
   --accent-blue: #3b82f6;
   --accent-blue-dim: rgba(59, 130, 246, 0.15);
-  --accent-red: #ef4444;
-  --accent-red-dim: rgba(239, 68, 68, 0.15);
+  --accent-red: #ff0055;
+  --accent-red-dim: rgba(255, 0, 85, 0.15);
   --accent-amber: #f59e0b;
   --accent-amber-dim: rgba(245, 158, 11, 0.15);
   --accent-cyan: #06b6d4;
 
   /* Text */
-  --text-primary: #e2e8f0;
-  --text-secondary: #94a3b8;
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
   --text-muted: #64748b;
-  --text-inverse: #060a13;
+  --text-inverse: #02040a;
 
   /* Borders */
-  --border-subtle: rgba(148, 163, 184, 0.1);
-  --border-accent: rgba(0, 255, 159, 0.2);
-  --border-hover: rgba(0, 255, 159, 0.4);
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-accent: rgba(0, 240, 255, 0.3);
+  --border-hover: rgba(176, 0, 255, 0.5);
 
   /* Gradients */
-  --gradient-hero: linear-gradient(135deg, #060a13 0%, #0c1220 50%, #111827 100%);
-  --gradient-card: linear-gradient(145deg, rgba(12, 18, 32, 0.9) 0%, rgba(17, 24, 39, 0.7) 100%);
-  --gradient-accent: linear-gradient(135deg, var(--accent-green) 0%, var(--accent-cyan) 100%);
-  --gradient-text: linear-gradient(135deg, var(--accent-green) 0%, var(--accent-blue) 100%);
+  --gradient-hero: radial-gradient(circle at 50% 0%, #14182b 0%, #02040a 70%);
+  --gradient-card: linear-gradient(145deg, rgba(24, 30, 54, 0.6) 0%, rgba(10, 13, 26, 0.4) 100%);
+  --gradient-accent: linear-gradient(135deg, var(--accent-green) 0%, var(--accent-purple) 100%);
+  --gradient-text: linear-gradient(135deg, var(--accent-green) 0%, var(--accent-purple) 100%);
 
   /* Spacing */
   --space-xs: 0.25rem;
@@ -77,11 +77,11 @@
   --radius-full: 9999px;
 
   /* Shadows */
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.5);
-  --shadow-glow: 0 0 20px rgba(0, 255, 159, 0.15);
-  --shadow-glow-strong: 0 0 40px rgba(0, 255, 159, 0.25);
+  --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 8px 16px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.6);
+  --shadow-glow: 0 0 30px rgba(0, 240, 255, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+  --shadow-glow-strong: 0 0 50px rgba(176, 0, 255, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.2);
 
   /* Transitions */
   --transition-fast: 150ms ease;
@@ -117,20 +117,31 @@ body {
   overflow-x: hidden;
 }
 
-/* Animated background grid */
+/* Animated background orbs */
 body::before {
   content: '';
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: 
-    linear-gradient(rgba(0, 255, 159, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 255, 159, 0.03) 1px, transparent 1px);
-  background-size: 60px 60px;
+  top: -20%;
+  left: -10%;
+  width: 50%;
+  height: 60%;
+  background: radial-gradient(circle, rgba(176, 0, 255, 0.15) 0%, transparent 60%);
   pointer-events: none;
   z-index: 0;
+  animation: float 20s ease-in-out infinite alternate;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  bottom: -20%;
+  right: -10%;
+  width: 60%;
+  height: 70%;
+  background: radial-gradient(circle, rgba(0, 240, 255, 0.1) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+  animation: float 25s ease-in-out infinite alternate-reverse;
 }
 
 a {
@@ -173,20 +184,24 @@ img {
   border: 0;
 }
 
-/* --- Glass Card --- */
+/* --- Glass Card (3D Spatial UI) --- */
 .glass-card {
   background: var(--gradient-card);
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  transition: all var(--transition-base);
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  border-left: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-xl);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  box-shadow: var(--shadow-lg), inset 0 2px 4px rgba(255, 255, 255, 0.02);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transform-style: preserve-3d;
 }
 
 .glass-card:hover {
   border-color: var(--border-accent);
-  box-shadow: var(--shadow-glow);
-  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow), 0 20px 40px rgba(0, 0, 0, 0.8);
+  transform: translateY(-8px) scale(1.02);
 }
 
 /* --- Section Headers --- */
@@ -353,6 +368,12 @@ img {
   }
 }
 
+@keyframes float {
+  0% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-30px) scale(1.05); }
+  100% { transform: translateY(0) scale(1); }
+}
+
 .animate-in {
   animation: fadeInUp 0.5s ease both;
 }
@@ -425,6 +446,7 @@ img {
 .post-content h3 {
   font-size: var(--text-xl);
   color: var(--accent-green);
+  text-shadow: 0 0 10px var(--accent-green-dim);
 }
 
 .post-content p {
@@ -444,19 +466,27 @@ img {
 }
 
 .post-content blockquote {
-  border-left: 3px solid var(--accent-green);
+  border-left: 3px solid var(--accent-purple);
   margin: var(--space-lg) 0;
   padding: var(--space-md) var(--space-lg);
-  background: var(--accent-green-dim);
+  background: var(--accent-purple-dim);
   border-radius: 0 var(--radius-md) var(--radius-md) 0;
   color: var(--text-secondary);
   font-style: italic;
+  box-shadow: inset 2px 0 0 0 var(--accent-purple);
 }
 
 .post-content a {
   color: var(--accent-green);
-  text-decoration: underline;
-  text-underline-offset: 2px;
+  text-decoration: none;
+  border-bottom: 1px dashed var(--accent-green);
+  transition: all 0.2s ease;
+}
+
+.post-content a:hover {
+  color: var(--accent-purple);
+  border-bottom-color: var(--accent-purple);
+  text-shadow: 0 0 8px var(--accent-purple-dim);
 }
 
 .post-content strong {
