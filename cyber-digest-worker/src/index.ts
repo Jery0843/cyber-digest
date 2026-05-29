@@ -9,7 +9,7 @@ import { rankEvents } from './pipeline/rank';
 import { selectTopics } from './pipeline/select';
 import { generateContent } from './generation/generator';
 import { validateContent } from './generation/validator';
-import { savePost, logGeneration } from './db/queries';
+import { savePost, logGeneration, getRecentSourceUrls } from './db/queries';
 
 export default {
   // Provide a fetch handler for testing the worker manually without waiting for cron
@@ -38,6 +38,11 @@ export default {
 
       let allEvents = [...nvdEvents, ...cisaEvents, ...ghEvents, ...rssEvents];
       console.log(`Collected ${allEvents.length} raw events.`);
+
+      // Filter out events that we have already published recently
+      const recentUrls = await getRecentSourceUrls(env);
+      allEvents = allEvents.filter(e => !e.source_url || !recentUrls.has(e.source_url));
+      console.log(`After DB deduplication: ${allEvents.length} events remain.`);
 
       if (allEvents.length === 0) {
         console.log('No events collected today. Skipping generation.');

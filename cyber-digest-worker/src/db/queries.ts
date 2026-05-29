@@ -61,3 +61,17 @@ export async function logGeneration(env: Env, status: string, postsCreated: numb
     console.error('Failed to write generation log:', err);
   }
 }
+
+export async function getRecentSourceUrls(env: Env): Promise<Set<string>> {
+  try {
+    const results = await env.DB.prepare(`
+      SELECT source_url FROM post_sources 
+      WHERE created_at > datetime('now', '-3 days')
+    `).all<{ source_url: string }>();
+    
+    return new Set(results.results.map(r => r.source_url));
+  } catch (err) {
+    console.error('Failed to get recent source URLs:', err);
+    return new Set();
+  }
+}
