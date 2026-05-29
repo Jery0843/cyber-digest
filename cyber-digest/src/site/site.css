@@ -601,10 +601,40 @@ p { margin: 0; }
   border-color: #fff;
 }
 
-.rocket-icon {
-  width: 24px;
+.double-arrow {
+  position: relative;
+  width: 20px;
   height: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(4px);
+}
+
+.double-arrow span {
+  display: block;
+  width: 14px;
+  height: 14px;
+  border-top: 3px solid currentColor;
+  border-left: 3px solid currentColor;
+  transform: rotate(45deg);
   transition: transform 0.3s ease;
+  margin-top: -6px;
+  filter: drop-shadow(-2px -2px 2px rgba(176, 0, 255, 0.5));
+}
+
+.double-arrow span:nth-child(2) {
+  opacity: 0.6;
+}
+
+.rocket-scroll:hover .double-arrow span {
+  animation: pulse-arrow 0.8s infinite alternate;
+}
+
+@keyframes pulse-arrow {
+  0% { transform: rotate(45deg) translate(0, 0); }
+  100% { transform: rotate(45deg) translate(-3px, -3px); }
 }
 
 .rocket-scroll.launching {
@@ -614,7 +644,7 @@ p { margin: 0; }
   pointer-events: none;
 }
 
-.rocket-scroll.launching .rocket-icon {
+.rocket-scroll.launching .double-arrow {
   animation: shake 0.2s infinite;
 }
 
