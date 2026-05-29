@@ -49,23 +49,33 @@ export async function generateContent(env: Env, events: CyberEvent[], type: 'new
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userPrompt }
         ],
-        // Encourage JSON output if supported by the model wrapper, though prompt engineering usually suffices
+        max_tokens: maxTokens,
+        temperature: 0.2,
         response_format: { type: "json_object" } 
       });
 
-      let jsonStr = '';
-      if (typeof response === 'string') {
-        jsonStr = response;
-      } else if (response && (response as any).response) {
-        jsonStr = (response as any).response;
+      console.log('Workers AI raw response type:', typeof response);
+      console.log('Workers AI raw response keys:', response ? Object.keys(response) : 'null');
+      console.log('Workers AI raw response:', JSON.stringify(response));
+
+      let parsed: GeneratedContent;
+      
+      if (response && typeof response === 'object') {
+        const aiResp = (response as any).response;
+        if (aiResp && typeof aiResp === 'object') {
+          parsed = aiResp;
+        } else if (typeof aiResp === 'string') {
+          let cleanStr = aiResp.replace(/```json/g, '').replace(/```/g, '').trim();
+          parsed = JSON.parse(cleanStr);
+        } else {
+          throw new Error('Unexpected response format from Workers AI');
+        }
+      } else if (typeof response === 'string') {
+        let cleanStr = response.replace(/```json/g, '').replace(/```/g, '').trim();
+        parsed = JSON.parse(cleanStr);
       } else {
         throw new Error('Unexpected response format from Workers AI');
       }
-
-      // Cleanup markdown code blocks if the model wrapped the JSON
-      jsonStr = jsonStr.replace(/```json/g, '').replace(/```/g, '').trim();
-
-      const parsed: GeneratedContent = JSON.parse(jsonStr);
       
       // Basic structural validation
       if (!parsed.title || !parsed.content || !parsed.summary || typeof parsed.confidence_score !== 'number') {
