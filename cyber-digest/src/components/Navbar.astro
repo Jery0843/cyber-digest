@@ -1,11 +1,12 @@
 ---
 const currentPath = Astro.url.pathname;
 const navLinks = [
-  { href: '/', label: 'Home', icon: '⌂' },
-  { href: '/news', label: 'News', icon: '◈' },
-  { href: '/blog', label: 'Blog', icon: '◉' },
-  { href: '/articles', label: 'Articles', icon: '◆' },
-  { href: '/archive', label: 'Archive', icon: '▤' },
+  { href: '/', label: 'Home', icon: '⌂', id: 'home' },
+  { href: '/news', label: 'News', icon: '◈', id: 'news' },
+  { href: '/blog', label: 'Blog', icon: '◉', id: 'blog' },
+  { href: '/articles', label: 'Articles', icon: '◆', id: 'articles' },
+  { href: '/archive', label: 'Archive', icon: '▤', id: 'archive' },
+  { href: 'https://0xjerry.jerome.co.in', label: "0xJerry's Lab", icon: '⌬', id: 'lab' },
 ];
 ---
 <nav class="navbar" id="main-nav">
@@ -21,7 +22,7 @@ const navLinks = [
     </a>
     <div class="navbar__links" id="nav-links">
       {navLinks.map(link => (
-        <a href={link.href} class:list={['navbar__link', { 'navbar__link--active': currentPath === link.href || (link.href !== '/' && currentPath.startsWith(link.href)) }]} id={`nav-${link.label.toLowerCase()}`}>
+        <a href={link.href} class:list={['navbar__link', { 'navbar__link--active': currentPath === link.href || (link.href !== '/' && currentPath.startsWith(link.href)) }]} id={`nav-${link.id}`} target={link.href.startsWith('http') ? "_blank" : undefined} rel={link.href.startsWith('http') ? "noopener noreferrer" : undefined}>
           <span class="navbar__link-icon">{link.icon}</span>
           {link.label}
         </a>
