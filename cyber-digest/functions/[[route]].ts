@@ -73,6 +73,7 @@ function sidebar(currentPath: string): string {
       <a href="/news" class="sidebar__link ${isActive('/news')}"><span class="icon">⚡</span> Intelligence</a>
       <a href="/blog" class="sidebar__link ${isActive('/blog')}"><span class="icon">📝</span> Reports</a>
       <a href="/articles" class="sidebar__link ${isActive('/articles')}"><span class="icon">📚</span> Global Threats</a>
+      <a href="/education" class="sidebar__link ${isActive('/education')}"><span class="icon">💻</span> Hack Lab</a>
       <a href="/archive" class="sidebar__link ${isActive('/archive')}"><span class="icon">🗄️</span> Resources</a>
       <a href="https://0xjerry.jerome.co.in" class="sidebar__link" target="_blank" rel="noopener noreferrer"><span class="icon">⌬</span> 0xJerry's Lab</a>
     </nav>
@@ -235,6 +236,787 @@ app.get('/news', (c) => listingPage(c, 'news', 'Cyber <span>News</span>', 'Daily
 app.get('/blog', (c) => listingPage(c, 'blog', 'Cyber <span>Blog</span>', 'Educational Posts', 'Practical cybersecurity explainers and context.'));
 app.get('/articles', (c) => listingPage(c, 'article', 'Threat <span>Articles</span>', 'Deep Analysis', 'Long-form security analysis and prioritization guidance.'));
 
+app.get('/education', (c) => {
+  return c.html(layout({
+    title: 'Hack Lab - Ethical Hacking Education',
+    description: 'Practical ethical hacking tutorials, offensive security resources, and lab writeups.',
+    path: '/education',
+    body: `
+      <div class="dashboard-content-area">
+        <div class="container">
+          <div class="dashboard-header animate-in">
+            <p class="dashboard-header__label">Education & Training</p>
+            <h1 class="dashboard-header__title">Hack <span>Lab</span></h1>
+            <p class="dashboard-header__desc">Advanced offensive security resources, structured learning modules, and ethical hacking methodology.</p>
+          </div>
+          
+          <section class="page-content" style="margin-top: 1rem;">
+            <div class="section-header">
+              <p class="section-header__label">Curriculum</p>
+              <h2 class="section-header__title">Table of <span>Contents</span></h2>
+            </div>
+            
+            <div class="list-grid" style="display: flex; flex-direction: column; gap: 1rem;">
+              <a href="/education/module-1" class="glass-card archive-row animate-in" style="display: flex; align-items: center; justify-content: space-between; text-decoration: none;">
+                <div>
+                  <strong style="color: var(--accent-blue);">Module 01</strong>
+                  <h3 style="margin: 0.5rem 0 0 0; color: #fff;">Introduction to Ethical Hacking</h3>
+                </div>
+                <span style="color: var(--accent-purple);">View Module &rarr;</span>
+              </a>
+              <div class="glass-card archive-row animate-in" style="opacity: 0.5; display: flex; align-items: center; justify-content: space-between; cursor: not-allowed; animation-delay: 0.1s">
+                <div>
+                  <strong>Module 02</strong>
+                  <h3 style="margin: 0.5rem 0 0 0; color: #999;">Footprinting and Reconnaissance</h3>
+                </div>
+                <span style="color: #666;">Coming Soon</span>
+              </div>
+              <div class="glass-card archive-row animate-in" style="opacity: 0.5; display: flex; align-items: center; justify-content: space-between; cursor: not-allowed; animation-delay: 0.2s">
+                <div>
+                  <strong>Module 03</strong>
+                  <h3 style="margin: 0.5rem 0 0 0; color: #999;">Scanning Networks</h3>
+                </div>
+                <span style="color: #666;">Coming Soon</span>
+              </div>
+            </div>
+          </section>
+
+          <section class="page-content" style="margin-top: 3rem;">
+            <div class="section-header">
+              <p class="section-header__label">Methodology</p>
+              <h2 class="section-header__title">Attack <span>Lifecycle</span></h2>
+            </div>
+            
+            <div class="glass-card animate-in" style="padding: 2rem;">
+              <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1.5rem;">
+                <li style="display: flex; gap: 1rem; align-items: flex-start;">
+                  <div style="background: rgba(0,240,255,0.1); color: var(--accent-blue); padding: 0.5rem; border-radius: 4px; font-family: var(--font-mono);">01</div>
+                  <div>
+                    <h4 style="margin: 0 0 0.5rem 0; color: #fff;">Reconnaissance</h4>
+                    <p style="margin: 0; color: #999; font-size: 0.9rem;">Information gathering using OSINT, DNS enumeration, and target surface mapping.</p>
+                  </div>
+                </li>
+                <li style="display: flex; gap: 1rem; align-items: flex-start;">
+                  <div style="background: rgba(176,0,255,0.1); color: var(--accent-purple); padding: 0.5rem; border-radius: 4px; font-family: var(--font-mono);">02</div>
+                  <div>
+                    <h4 style="margin: 0 0 0.5rem 0; color: #fff;">Weaponization & Delivery</h4>
+                    <p style="margin: 0; color: #999; font-size: 0.9rem;">Crafting payloads and selecting delivery vectors based on discovered vulnerabilities.</p>
+                  </div>
+                </li>
+                <li style="display: flex; gap: 1rem; align-items: flex-start;">
+                  <div style="background: rgba(255,0,85,0.1); color: var(--accent-red); padding: 0.5rem; border-radius: 4px; font-family: var(--font-mono);">03</div>
+                  <div>
+                    <h4 style="margin: 0 0 0.5rem 0; color: #fff;">Exploitation & Privilege Escalation</h4>
+                    <p style="margin: 0; color: #999; font-size: 0.9rem;">Executing attacks to gain initial access, followed by vertical/horizontal privilege climbing.</p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+
+        </div>
+      </div>
+    `
+  }));
+});
+
+app.get('/education/module-1', (c) => {
+  return c.html(layout({
+    title: 'Module 1: Introduction to Ethical Hacking - Hack Lab',
+    description: 'A comprehensive guide to information security, threat modeling, and ethical hacking.',
+    path: '/education',
+    body: `
+      <div class="dashboard-content-area">
+        <div class="container" style="max-width: 1100px; margin: 0 auto;">
+          <article class="post-page animate-in">
+            <header class="post-page__header" style="text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 3rem; margin-bottom: 3rem;">
+              <div class="post-page__meta" style="justify-content: center;"><span class="type-badge type-badge--article">Module 01</span></div>
+              <h1 class="post-page__title" style="font-size: 3.5rem; margin-bottom: 1rem; background: linear-gradient(90deg, #fff, #888); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Introduction to Ethical Hacking</h1>
+              <p class="post-page__summary" style="font-size: 1.3rem; color: #aaa; max-width: 800px; margin: 0 auto;">A comprehensive exploration of the fundamental concepts of information security, hacking methodologies, security controls, and the legal frameworks governing ethical hacking operations.</p>
+            </header>
+
+            <div class="post-content animate-in" style="font-size: 1.15rem; line-height: 1.8; color: #ccc;">
+              
+              <!-- Section 1 -->
+              <div class="glass-card" style="padding: 3rem; margin-bottom: 4rem; border-left: 4px solid var(--accent-blue);">
+                <h2 style="margin-top: 0; color: #fff; font-size: 2rem;">1. Information Security Overview</h2>
+                <p>Information security is the practice of protecting information by mitigating information risks. It is the state of well-being of information and infrastructure in which the possibility of theft, tampering, and disruption of information and services is kept low or tolerable.</p>
+                
+                <h3 style="color: #fff; margin-top: 2rem;">The Core Elements (CIA Triad + 2)</h3>
+                <p>Modern information security relies on five foundational pillars:</p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem;">
+                  <div style="background: rgba(255,255,255,0.03); padding: 1.5rem; border-radius: 8px;">
+                    <strong style="color: var(--accent-blue); font-size: 1.2rem; display: block; margin-bottom: 0.5rem;">Confidentiality</strong>
+                    Assurance that information is accessible only to authorized entities. Breaches occur due to improper data handling or unauthorized access. Controls include encryption, access controls, and data classification.
+                  </div>
+                  <div style="background: rgba(255,255,255,0.03); padding: 1.5rem; border-radius: 8px;">
+                    <strong style="color: var(--accent-purple); font-size: 1.2rem; display: block; margin-bottom: 0.5rem;">Integrity</strong>
+                    The trustworthiness of data or resources. It guarantees that information has not been improperly altered. Controls include hashing algorithms (SHA-256), digital signatures, and strict access controls.
+                  </div>
+                  <div style="background: rgba(255,255,255,0.03); padding: 1.5rem; border-radius: 8px;">
+                    <strong style="color: var(--accent-green); font-size: 1.2rem; display: block; margin-bottom: 0.5rem;">Availability</strong>
+                    Assurance that systems delivering and storing information are accessible when required. Controls include redundancy (RAID), failover clusters, and DDoS mitigation strategies.
+                  </div>
+                  <div style="background: rgba(255,255,255,0.03); padding: 1.5rem; border-radius: 8px;">
+                    <strong style="color: var(--accent-red); font-size: 1.2rem; display: block; margin-bottom: 0.5rem;">Authenticity</strong>
+                    The characteristic of a communication or document that ensures the quality of being genuine. Controls include Biometrics, Smart Cards, and PKI Certificates.
+                  </div>
+                  <div style="background: rgba(255,255,255,0.03); padding: 1.5rem; border-radius: 8px; grid-column: 1 / -1;">
+                    <strong style="color: #fff; font-size: 1.2rem; display: block; margin-bottom: 0.5rem;">Non-Repudiation</strong>
+                    A guarantee that the sender of a message cannot later deny having sent the message, and the recipient cannot deny having received it. Digital signatures and audit trails provide non-repudiation.
+                  </div>
+                </div>
+
+                <h3 style="color: #fff; margin-top: 3rem;">Information Security Terminology</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; font-size: 0.95rem;">
+                  <div style="background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 6px;">
+                    <strong style="color: var(--accent-blue);">Hack Value:</strong> The notion among hackers that something is worth doing or is interesting. It is the perceived value of a target.
+                  </div>
+                  <div style="background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 6px;">
+                    <strong style="color: var(--accent-blue);">Vulnerability:</strong> The existence of a weakness, design, or implementation error that can lead to an unexpected event compromising the system.
+                  </div>
+                  <div style="background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 6px;">
+                    <strong style="color: var(--accent-blue);">Exploit:</strong> A breach of IT system security through vulnerabilities. It refers to the malicious code or technique used to take advantage of a flaw.
+                  </div>
+                  <div style="background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 6px;">
+                    <strong style="color: var(--accent-blue);">Payload:</strong> The part of malware or an exploit that performs the intended malicious action, such as deleting data or stealing passwords.
+                  </div>
+                  <div style="background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 6px;">
+                    <strong style="color: var(--accent-blue);">Zero-Day Attack:</strong> An attack that exploits a previously unknown computer vulnerability. "Zero-day" implies the developers had zero days of notice to fix the flaw before it was exploited.
+                  </div>
+                  <div style="background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 6px;">
+                    <strong style="color: var(--accent-blue);">Daisy Chaining:</strong> Gaining access to one network or computer and using it to gain access to multiple other networks.
+                  </div>
+                  <div style="background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 6px;">
+                    <strong style="color: var(--accent-blue);">Doxing:</strong> Publishing personally identifiable information about an individual or organization, usually gathered from public databases, social media, or hacking.
+                  </div>
+                  <div style="background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 6px;">
+                    <strong style="color: var(--accent-blue);">Target of Evaluation (TOE):</strong> An IT product or system and its associated administrator and user guidance documentation that is the subject of an evaluation.
+                  </div>
+                </div>
+              </div>
+
+              <!-- Section 2 -->
+              <h2 style="color: var(--accent-red); font-size: 2rem; margin-top: 4rem;">2. Motives, Goals, and Attack Vectors</h2>
+              <p>Understanding the "why" and "how" of an attack is critical to anticipating it. Every cyberattack can be mathematically conceptualized as:</p>
+              
+              <div style="background: rgba(255,0,85,0.1); border: 1px solid rgba(255,0,85,0.3); padding: 2rem; text-align: center; font-size: 1.5rem; border-radius: 8px; font-family: var(--font-mono); margin: 2rem 0; color: #fff;">
+                Attack = Motive (Goal) + Method (TTP) + Vulnerability
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 2rem;">
+                <div>
+                  <h3 style="color: #fff; margin-top: 0;">Common Motives</h3>
+                  <ul style="font-size: 0.95rem;">
+                    <li>Disrupting business continuity</li>
+                    <li>Information theft and corporate espionage</li>
+                    <li>Financial loss to the target (Ransomware)</li>
+                    <li>State-sponsored military objectives</li>
+                    <li>Propagating religious or political beliefs</li>
+                    <li>Damaging target reputation or exacting revenge</li>
+                  </ul>
+                </div>
+                <div>
+                  <h3 style="color: #fff; margin-top: 0;">Threat Categories</h3>
+                  <ul style="font-size: 0.95rem;">
+                    <li><strong>Network Threats:</strong> Information gathering, sniffing, spoofing, session hijacking, MITM attacks.</li>
+                    <li><strong>Host Threats:</strong> Malware, footprinting, password guessing, privilege escalation, DoS attacks.</li>
+                    <li><strong>Application Threats:</strong> Injection attacks (SQLi), XSS, parameter tampering, directory traversal.</li>
+                  </ul>
+                </div>
+              </div>
+
+              <h3 style="color: #fff; margin-top: 3rem;">Tactics, Techniques, and Procedures (TTPs)</h3>
+              <p>Threat actors do not attack randomly; they follow established TTPs:</p>
+              <table style="width: 100%; border-collapse: collapse; margin: 1.5rem 0; background: rgba(0,0,0,0.2);">
+                <tr style="background: rgba(255,255,255,0.05); text-align: left;">
+                  <th style="padding: 1rem; border: 1px solid rgba(255,255,255,0.1);">Component</th>
+                  <th style="padding: 1rem; border: 1px solid rgba(255,255,255,0.1);">Definition</th>
+                  <th style="padding: 1rem; border: 1px solid rgba(255,255,255,0.1);">Example</th>
+                </tr>
+                <tr>
+                  <td style="padding: 1rem; border: 1px solid rgba(255,255,255,0.1);"><strong>Tactics</strong></td>
+                  <td style="padding: 1rem; border: 1px solid rgba(255,255,255,0.1);">The overarching strategy adopted by an attacker.</td>
+                  <td style="padding: 1rem; border: 1px solid rgba(255,255,255,0.1);">Initial Access</td>
+                </tr>
+                <tr>
+                  <td style="padding: 1rem; border: 1px solid rgba(255,255,255,0.1);"><strong>Techniques</strong></td>
+                  <td style="padding: 1rem; border: 1px solid rgba(255,255,255,0.1);">Technical methods used to achieve the tactic.</td>
+                  <td style="padding: 1rem; border: 1px solid rgba(255,255,255,0.1);">Phishing / Spearphishing</td>
+                </tr>
+                <tr>
+                  <td style="padding: 1rem; border: 1px solid rgba(255,255,255,0.1);"><strong>Procedures</strong></td>
+                  <td style="padding: 1rem; border: 1px solid rgba(255,255,255,0.1);">The step-by-step approach to launch the attack.</td>
+                  <td style="padding: 1rem; border: 1px solid rgba(255,255,255,0.1);">Sending a macro-enabled Excel document via email.</td>
+                </tr>
+              </table>
+
+              <h3 style="color: #fff; margin-top: 3rem;">Top Information Security Attack Vectors</h3>
+              <p>An attack vector is a path or means by which a hacker gains access to a computer or network server. The most prevalent vectors today include:</p>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; font-size: 0.95rem;">
+                <div style="background: rgba(255,0,85,0.05); padding: 1.25rem; border-radius: 8px; border-left: 3px solid var(--accent-red);">
+                  <strong style="color: #fff; display: block; margin-bottom: 0.5rem;">Cloud Computing Threats</strong>
+                  Flaws in cloud deployment, misconfigured buckets, insecure APIs, and lack of visibility.
+                </div>
+                <div style="background: rgba(255,0,85,0.05); padding: 1.25rem; border-radius: 8px; border-left: 3px solid var(--accent-red);">
+                  <strong style="color: #fff; display: block; margin-bottom: 0.5rem;">Advanced Persistent Threats (APT)</strong>
+                  Stealthy and continuous computer network attack processes orchestrated by highly skilled state-sponsored actors targeting specific entities.
+                </div>
+                <div style="background: rgba(255,0,85,0.05); padding: 1.25rem; border-radius: 8px; border-left: 3px solid var(--accent-red);">
+                  <strong style="color: #fff; display: block; margin-bottom: 0.5rem;">Mobile Device Threats</strong>
+                  Malicious apps, smishing, weak encryption, and insecure OS implementations on BYOD devices.
+                </div>
+                <div style="background: rgba(255,0,85,0.05); padding: 1.25rem; border-radius: 8px; border-left: 3px solid var(--accent-red);">
+                  <strong style="color: #fff; display: block; margin-bottom: 0.5rem;">Insider Threats</strong>
+                  Disgruntled employees or contractors misusing authorized access to steal or destroy data.
+                </div>
+                <div style="background: rgba(255,0,85,0.05); padding: 1.25rem; border-radius: 8px; border-left: 3px solid var(--accent-red);">
+                  <strong style="color: #fff; display: block; margin-bottom: 0.5rem;">IoT Threats</strong>
+                  Default passwords, lack of firmware updates, and botnet recruiting (e.g., Mirai) across interconnected smart devices.
+                </div>
+                <div style="background: rgba(255,0,85,0.05); padding: 1.25rem; border-radius: 8px; border-left: 3px solid var(--accent-red);">
+                  <strong style="color: #fff; display: block; margin-bottom: 0.5rem;">Web Application Threats</strong>
+                  Exploiting software flaws like Cross-Site Scripting (XSS), SQL injection, and insecure direct object references (IDOR).
+                </div>
+              </div>
+
+              <!-- Section 3 -->
+              <h2 style="color: #fff; font-size: 2rem; margin-top: 4rem;">3. Classification of Attacks &amp; Information Warfare</h2>
+              
+              <h3 style="color: #fff;">Classification of Attacks</h3>
+              <p>Attacks are broadly categorized based on their execution methodology and the location of the attacker relative to the target.</p>
+              
+              <div style="display: flex; flex-direction: column; gap: 1.5rem; margin: 2rem 0;">
+                <div style="padding-left: 1.5rem; border-left: 2px solid var(--accent-blue);">
+                  <strong style="color: #fff; display: block; font-size: 1.2rem;">Passive Attacks</strong>
+                  <p style="margin: 0.5rem 0 0 0;">The attacker intercepts data without altering it. Because there is no active interaction, these attacks are exceedingly difficult to detect. <em>Examples: Network sniffing, traffic analysis, eavesdropping.</em></p>
+                </div>
+                <div style="padding-left: 1.5rem; border-left: 2px solid var(--accent-red);">
+                  <strong style="color: #fff; display: block; font-size: 1.2rem;">Active Attacks</strong>
+                  <p style="margin: 0.5rem 0 0 0;">The attacker actively tampers with data or disrupts communications. These attacks generate detectable noise on the network. <em>Examples: DoS, DDoS, SQL Injection, Man-in-the-Middle (MITM).</em></p>
+                </div>
+                <div style="padding-left: 1.5rem; border-left: 2px solid #888;">
+                  <strong style="color: #fff; display: block; font-size: 1.2rem;">Close-In Attacks</strong>
+                  <p style="margin: 0.5rem 0 0 0;">The attacker must be in physical proximity to the target network or personnel. <em>Examples: Shoulder surfing, dumpster diving, unauthorized facility entry.</em></p>
+                </div>
+                <div style="padding-left: 1.5rem; border-left: 2px solid var(--accent-purple);">
+                  <strong style="color: #fff; display: block; font-size: 1.2rem;">Insider Attacks</strong>
+                  <p style="margin: 0.5rem 0 0 0;">Executed by a trusted entity (employee, contractor) who misuses privileged access. <em>Examples: Data exfiltration, planting logic bombs, intentional misconfiguration.</em></p>
+                </div>
+                <div style="padding-left: 1.5rem; border-left: 2px solid var(--accent-green);">
+                  <strong style="color: #fff; display: block; font-size: 1.2rem;">Distribution Attacks</strong>
+                  <p style="margin: 0.5rem 0 0 0;">Also known as Supply Chain attacks. The attacker tampers with hardware or software at its source or during transit prior to installation. <em>Examples: Malicious firmware injection, compromised software updates.</em></p>
+                </div>
+              </div>
+
+              <h3 style="color: #fff; margin-top: 3rem;">Information Warfare (InfoWar)</h3>
+              <p>Information warfare is the use of ICT to gain competitive advantages over an opponent. According to Martin Libicki, information warfare is divided into several categories:</p>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; font-size: 0.95rem;">
+                <div style="background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 6px;">
+                  <strong style="color: var(--accent-blue);">Command and Control (C2) Warfare:</strong> Disrupting the enemy's C2 systems while protecting one's own.
+                </div>
+                <div style="background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 6px;">
+                  <strong style="color: var(--accent-blue);">Intelligence-based Warfare:</strong> Designing, protecting, and denying systems that seek sufficient knowledge to dominate the battlespace.
+                </div>
+                <div style="background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 6px;">
+                  <strong style="color: var(--accent-blue);">Electronic Warfare:</strong> Using radio, electronic, or cryptographic techniques to degrade communication capabilities.
+                </div>
+                <div style="background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 6px;">
+                  <strong style="color: var(--accent-blue);">Psychological Warfare:</strong> Using information to change the minds of friends, neutrals, and foes (e.g., demagoguery).
+                </div>
+                <div style="background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 6px;">
+                  <strong style="color: var(--accent-blue);">Hacker Warfare:</strong> Attacking civilian and military computer systems using software flaws, logic bombs, and viruses.
+                </div>
+                <div style="background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 6px;">
+                  <strong style="color: var(--accent-blue);">Economic Warfare:</strong> Monopolizing information or altering economic data to disrupt an adversary's economy.
+                </div>
+                <div style="background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 6px;">
+                  <strong style="color: var(--accent-blue);">Cyber Warfare:</strong> The use of information systems against virtual personas to achieve military or strategic objectives.
+                </div>
+              </div>
+
+              <!-- Section 4 -->
+              <div class="glass-card" style="padding: 3rem; margin: 4rem 0; border-top: 4px solid var(--accent-purple);">
+                <h2 style="margin-top: 0; color: #fff; font-size: 2rem;">4. Hacking Concepts and Threat Actors</h2>
+                <p>Hacking in computer security refers to exploiting vulnerabilities and compromising security controls to gain unauthorized or inappropriate access to system resources. The individuals conducting these activities are classified into various groups based on their intent, authorization, and affiliation.</p>
+                
+                <h3 style="color: #fff; margin-top: 2rem;">Hacker Classes</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
+                  <div style="background: rgba(0,0,0,0.4); padding: 1.5rem; border-radius: 8px;">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                      <div style="width: 16px; height: 16px; border-radius: 50%; background: var(--accent-green);"></div>
+                      <strong style="color: #fff; font-size: 1.2rem;">White Hat Hackers</strong>
+                    </div>
+                    <p style="margin: 0; font-size: 0.95rem;">Authorized professionals hired to conduct penetration tests, identify vulnerabilities, and improve organizational security posture. They operate with strict consent.</p>
+                  </div>
+
+                  <div style="background: rgba(0,0,0,0.4); padding: 1.5rem; border-radius: 8px;">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                      <div style="width: 16px; height: 16px; border-radius: 50%; background: var(--accent-red);"></div>
+                      <strong style="color: #fff; font-size: 1.2rem;">Black Hat Hackers</strong>
+                    </div>
+                    <p style="margin: 0; font-size: 0.95rem;">Malicious actors who breach systems without authorization for financial gain, data theft, or destruction. Also known as crackers.</p>
+                  </div>
+
+                  <div style="background: rgba(0,0,0,0.4); padding: 1.5rem; border-radius: 8px;">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                      <div style="width: 16px; height: 16px; border-radius: 50%; background: #888;"></div>
+                      <strong style="color: #fff; font-size: 1.2rem;">Gray Hat Hackers</strong>
+                    </div>
+                    <p style="margin: 0; font-size: 0.95rem;">Individuals who operate in a moral gray area. They may hack systems without permission to find bugs, but usually report them to the owner rather than exploiting them maliciously.</p>
+                  </div>
+
+                  <div style="background: rgba(0,0,0,0.4); padding: 1.5rem; border-radius: 8px;">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                      <div style="width: 16px; height: 16px; border-radius: 50%; background: #d4af37;"></div>
+                      <strong style="color: #fff; font-size: 1.2rem;">Script Kiddies</strong>
+                    </div>
+                    <p style="margin: 0; font-size: 0.95rem;">Inexperienced individuals who use pre-written hacking tools, scripts, and software without understanding the underlying mechanics of the attacks.</p>
+                  </div>
+
+                  <div style="background: rgba(0,0,0,0.4); padding: 1.5rem; border-radius: 8px;">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                      <div style="width: 16px; height: 16px; border-radius: 50%; background: var(--accent-blue);"></div>
+                      <strong style="color: #fff; font-size: 1.2rem;">State-Sponsored Hackers</strong>
+                    </div>
+                    <p style="margin: 0; font-size: 0.95rem;">Highly skilled operators funded by national governments (APTs) targeting critical infrastructure, defense secrets, and intellectual property of rival nations.</p>
+                  </div>
+
+                  <div style="background: rgba(0,0,0,0.4); padding: 1.5rem; border-radius: 8px;">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                      <div style="width: 16px; height: 16px; border-radius: 50%; background: var(--accent-purple);"></div>
+                      <strong style="color: #fff; font-size: 1.2rem;">Hacktivists</strong>
+                    </div>
+                    <p style="margin: 0; font-size: 0.95rem;">Individuals or groups who launch cyberattacks (typically DDoS or website defacements) to promote a political, social, or religious agenda.</p>
+                  </div>
+
+                  <div style="background: rgba(0,0,0,0.4); padding: 1.5rem; border-radius: 8px;">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                      <div style="width: 16px; height: 16px; border-radius: 50%; background: rgba(255,255,255,0.5);"></div>
+                      <strong style="color: #fff; font-size: 1.2rem;">Suicide Hackers</strong>
+                    </div>
+                    <p style="margin: 0; font-size: 0.95rem;">Individuals who aim to bring down critical infrastructure for a cause, without worrying about facing jail terms or other punishments.</p>
+                  </div>
+
+                  <div style="background: rgba(0,0,0,0.4); padding: 1.5rem; border-radius: 8px;">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                      <div style="width: 16px; height: 16px; border-radius: 50%; background: #000; border: 1px solid rgba(255,0,85,0.5);"></div>
+                      <strong style="color: #fff; font-size: 1.2rem;">Cyber Terrorists</strong>
+                    </div>
+                    <p style="margin: 0; font-size: 0.95rem;">Individuals with a wide range of skills who are motivated by religious or political beliefs to create severe fear by disrupting large-scale computer networks.</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Section 5 -->
+              <h2 style="color: #fff; font-size: 2rem; margin-top: 4rem;">5. Ethical Hacking Concepts & Necessity</h2>
+              <p>Ethical hacking is necessary because it allows organizations to preemptively identify vulnerabilities and anticipate attack vectors. "To beat a hacker, you need to think like one."</p>
+              
+              <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.1); padding: 2rem; border-radius: 8px; margin: 2rem 0;">
+                <h3 style="margin-top: 0; color: var(--accent-blue);">Why Organizations Hire Ethical Hackers</h3>
+                <ul style="margin-bottom: 0;">
+                  <li>To uncover vulnerabilities in systems and explore their potential as a security risk.</li>
+                  <li>To analyze and strengthen the organization's overall security posture.</li>
+                  <li>To safeguard customer data and prevent catastrophic financial or reputational loss.</li>
+                  <li>To test the responsiveness of the internal incident response team (Blue Team).</li>
+                </ul>
+              </div>
+
+              <p><strong>Scope and Limitations:</strong> Ethical hackers operate strictly within the defined scope outlined by the organization. The most critical distinction between an ethical hacker and a malicious actor is <strong>consent</strong>. Ethical hacking requires formal, written permission (Rules of Engagement).</p>
+
+              <!-- Section 6 -->
+              <h2 style="color: var(--accent-blue); font-size: 2rem; margin-top: 4rem;">6. Hacking Methodologies and Frameworks</h2>
+              <p>Professional offensive operations follow strict, repeatable methodologies.</p>
+              
+              <h3 style="color: #fff;">The 5 Phases of Hacking</h3>
+              <div style="display: flex; flex-direction: column; gap: 1rem; margin: 2rem 0;">
+                <div style="display: flex; gap: 1.5rem; background: rgba(0,0,0,0.2); padding: 1.5rem; border-radius: 8px; align-items: center;">
+                  <div style="font-size: 2.5rem; font-weight: bold; color: rgba(255,255,255,0.1); width: 50px; text-align: center;">01</div>
+                  <div>
+                    <h4 style="margin: 0 0 0.5rem 0; color: #fff; font-size: 1.2rem;">Reconnaissance (Footprinting)</h4>
+                    <p style="margin: 0; font-size: 0.95rem;">Gathering information about the target prior to the attack. Can be Passive (OSINT, WHOIS) or Active (interacting with the target server).</p>
+                  </div>
+                </div>
+                <div style="display: flex; gap: 1.5rem; background: rgba(0,0,0,0.2); padding: 1.5rem; border-radius: 8px; align-items: center;">
+                  <div style="font-size: 2.5rem; font-weight: bold; color: rgba(255,255,255,0.1); width: 50px; text-align: center;">02</div>
+                  <div>
+                    <h4 style="margin: 0 0 0.5rem 0; color: #fff; font-size: 1.2rem;">Scanning & Enumeration</h4>
+                    <p style="margin: 0; font-size: 0.95rem;">Using the recon data to identify specific vulnerabilities, open ports, OS versions, and network topology using tools like Nmap.</p>
+                  </div>
+                </div>
+                <div style="display: flex; gap: 1.5rem; background: rgba(0,0,0,0.2); padding: 1.5rem; border-radius: 8px; align-items: center;">
+                  <div style="font-size: 2.5rem; font-weight: bold; color: var(--accent-red); width: 50px; text-align: center;">03</div>
+                  <div>
+                    <h4 style="margin: 0 0 0.5rem 0; color: #fff; font-size: 1.2rem;">Gaining Access</h4>
+                    <p style="margin: 0; font-size: 0.95rem;">The exploitation phase. The attacker bypasses security controls, executes code, escalates privileges, and extracts data.</p>
+                  </div>
+                </div>
+                <div style="display: flex; gap: 1.5rem; background: rgba(0,0,0,0.2); padding: 1.5rem; border-radius: 8px; align-items: center;">
+                  <div style="font-size: 2.5rem; font-weight: bold; color: rgba(255,255,255,0.1); width: 50px; text-align: center;">04</div>
+                  <div>
+                    <h4 style="margin: 0 0 0.5rem 0; color: #fff; font-size: 1.2rem;">Maintaining Access</h4>
+                    <p style="margin: 0; font-size: 0.95rem;">Ensuring persistence in the compromised environment using backdoors, rootkits, or trojans to survive reboots.</p>
+                  </div>
+                </div>
+                <div style="display: flex; gap: 1.5rem; background: rgba(0,0,0,0.2); padding: 1.5rem; border-radius: 8px; align-items: center;">
+                  <div style="font-size: 2.5rem; font-weight: bold; color: rgba(255,255,255,0.1); width: 50px; text-align: center;">05</div>
+                  <div>
+                    <h4 style="margin: 0 0 0.5rem 0; color: #fff; font-size: 1.2rem;">Clearing Tracks</h4>
+                    <p style="margin: 0; font-size: 0.95rem;">Deleting logs, modifying registry entries, and hiding malicious artifacts to evade detection and maintain uninhibited access.</p>
+                  </div>
+                </div>
+              </div>
+
+              <h3 style="color: #fff; margin-top: 3rem;">Cyber Kill Chain Methodology</h3>
+              <p>Developed by Lockheed Martin, the Cyber Kill Chain is a component of intelligence-driven defense for the identification and prevention of malicious intrusion activities. It provides a seven-phase protection mechanism and greater insight into adversary TTPs.</p>
+              <div style="display: flex; flex-direction: column; gap: 1rem; margin: 2rem 0;">
+                <div style="display: flex; gap: 1.5rem; background: rgba(0,0,0,0.2); padding: 1.5rem; border-radius: 8px; align-items: center;">
+                  <div style="font-size: 2rem; font-weight: bold; color: rgba(0,240,255,0.3); width: 30px; text-align: center;">1</div>
+                  <div><h4 style="margin: 0 0 0.5rem 0; color: #fff;">Reconnaissance</h4><p style="margin: 0; font-size: 0.95rem;">Gathering information about the target—searching the internet, social engineering, performing WHOIS/DNS footprinting, and scanning for open ports and services.</p></div>
+                </div>
+                <div style="display: flex; gap: 1.5rem; background: rgba(0,0,0,0.2); padding: 1.5rem; border-radius: 8px; align-items: center;">
+                  <div style="font-size: 2rem; font-weight: bold; color: rgba(0,240,255,0.3); width: 30px; text-align: center;">2</div>
+                  <div><h4 style="margin: 0 0 0.5rem 0; color: #fff;">Weaponization</h4><p style="margin: 0; font-size: 0.95rem;">Creating a tailored deliverable malicious payload using an exploit and a backdoor. The adversary may craft phishing campaigns or leverage exploit kits based on identified vulnerabilities.</p></div>
+                </div>
+                <div style="display: flex; gap: 1.5rem; background: rgba(0,0,0,0.2); padding: 1.5rem; border-radius: 8px; align-items: center;">
+                  <div style="font-size: 2rem; font-weight: bold; color: rgba(0,240,255,0.3); width: 30px; text-align: center;">3</div>
+                  <div><h4 style="margin: 0 0 0.5rem 0; color: #fff;">Delivery</h4><p style="margin: 0; font-size: 0.95rem;">Transmitting the weaponized payload to the victim via email attachments, malicious links, compromised websites, or USB drives.</p></div>
+                </div>
+                <div style="display: flex; gap: 1.5rem; background: rgba(0,0,0,0.2); padding: 1.5rem; border-radius: 8px; align-items: center;">
+                  <div style="font-size: 2rem; font-weight: bold; color: var(--accent-red); width: 30px; text-align: center;">4</div>
+                  <div><h4 style="margin: 0 0 0.5rem 0; color: #fff;">Exploitation</h4><p style="margin: 0; font-size: 0.95rem;">Triggering the malicious code to exploit a vulnerability in the OS, application, or server on the target system.</p></div>
+                </div>
+                <div style="display: flex; gap: 1.5rem; background: rgba(0,0,0,0.2); padding: 1.5rem; border-radius: 8px; align-items: center;">
+                  <div style="font-size: 2rem; font-weight: bold; color: rgba(0,240,255,0.3); width: 30px; text-align: center;">5</div>
+                  <div><h4 style="margin: 0 0 0.5rem 0; color: #fff;">Installation</h4><p style="margin: 0; font-size: 0.95rem;">Installing backdoors and maintaining persistence using encryption and evasion techniques to hide from security controls.</p></div>
+                </div>
+                <div style="display: flex; gap: 1.5rem; background: rgba(0,0,0,0.2); padding: 1.5rem; border-radius: 8px; align-items: center;">
+                  <div style="font-size: 2rem; font-weight: bold; color: rgba(0,240,255,0.3); width: 30px; text-align: center;">6</div>
+                  <div><h4 style="margin: 0 0 0.5rem 0; color: #fff;">Command and Control (C2)</h4><p style="margin: 0; font-size: 0.95rem;">Establishing a two-way encrypted communication channel between the victim's system and the adversary-controlled server for remote exploitation.</p></div>
+                </div>
+                <div style="display: flex; gap: 1.5rem; background: rgba(0,0,0,0.2); padding: 1.5rem; border-radius: 8px; align-items: center;">
+                  <div style="font-size: 2rem; font-weight: bold; color: rgba(0,240,255,0.3); width: 30px; text-align: center;">7</div>
+                  <div><h4 style="margin: 0 0 0.5rem 0; color: #fff;">Actions on Objectives</h4><p style="margin: 0; font-size: 0.95rem;">The adversary accomplishes their intended goals—data exfiltration, service disruption, or using the compromised system as a launchpad for further attacks.</p></div>
+                </div>
+              </div>
+
+              <!-- MITRE ATT&CK -->
+              <div class="glass-card" style="padding: 3rem; margin: 3rem 0; border-left: 4px solid var(--accent-purple);">
+                <h3 style="margin-top: 0; color: #fff; font-size: 1.5rem;">MITRE ATT&amp;CK Framework</h3>
+                <p>MITRE ATT&amp;CK is a globally accessible knowledge base of adversary tactics and techniques based on real-world observations. It is used as a foundation for developing specific threat models and methodologies. The framework contains 14 tactic categories derived from the later stages of the Cyber Kill Chain.</p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin: 1.5rem 0; font-size: 0.95rem;">
+                  <div style="background: rgba(176,0,255,0.1); padding: 0.75rem 1rem; border-radius: 6px;">Reconnaissance</div>
+                  <div style="background: rgba(176,0,255,0.1); padding: 0.75rem 1rem; border-radius: 6px;">Resource Development</div>
+                  <div style="background: rgba(176,0,255,0.1); padding: 0.75rem 1rem; border-radius: 6px;">Initial Access</div>
+                  <div style="background: rgba(176,0,255,0.1); padding: 0.75rem 1rem; border-radius: 6px;">Execution</div>
+                  <div style="background: rgba(176,0,255,0.1); padding: 0.75rem 1rem; border-radius: 6px;">Persistence</div>
+                  <div style="background: rgba(176,0,255,0.1); padding: 0.75rem 1rem; border-radius: 6px;">Privilege Escalation</div>
+                  <div style="background: rgba(176,0,255,0.1); padding: 0.75rem 1rem; border-radius: 6px;">Defense Evasion</div>
+                  <div style="background: rgba(176,0,255,0.1); padding: 0.75rem 1rem; border-radius: 6px;">Credential Access</div>
+                  <div style="background: rgba(176,0,255,0.1); padding: 0.75rem 1rem; border-radius: 6px;">Discovery</div>
+                  <div style="background: rgba(176,0,255,0.1); padding: 0.75rem 1rem; border-radius: 6px;">Lateral Movement</div>
+                  <div style="background: rgba(176,0,255,0.1); padding: 0.75rem 1rem; border-radius: 6px;">Collection</div>
+                  <div style="background: rgba(176,0,255,0.1); padding: 0.75rem 1rem; border-radius: 6px;">Command and Control</div>
+                  <div style="background: rgba(176,0,255,0.1); padding: 0.75rem 1rem; border-radius: 6px;">Exfiltration</div>
+                  <div style="background: rgba(176,0,255,0.1); padding: 0.75rem 1rem; border-radius: 6px;">Impact</div>
+                </div>
+                <p style="font-size: 0.95rem;"><strong>Use Cases:</strong> Prioritize defense capabilities, conduct alternatives analysis, determine security coverage, describe intrusion events using common references, identify adversary tradecraft commonalities, and connect mitigations with weaknesses.</p>
+              </div>
+
+              <!-- Diamond Model -->
+              <div class="glass-card" style="padding: 3rem; margin: 3rem 0; border-left: 4px solid #d4af37;">
+                <h3 style="margin-top: 0; color: #fff; font-size: 1.5rem;">Diamond Model of Intrusion Analysis</h3>
+                <p>The Diamond Model offers a framework for identifying clusters of correlated events in any intrusion activity. It consists of four core features that, when arranged by their relationships, form a diamond-shaped structure.</p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 1.5rem 0;">
+                  <div style="background: rgba(255,255,255,0.03); padding: 1.25rem; border-radius: 8px;">
+                    <strong style="color: var(--accent-red); display: block; margin-bottom: 0.5rem;">Adversary</strong>
+                    <span style="font-size: 0.95rem;">The opponent "who" was behind the attack—an individual, insider, or competing organization.</span>
+                  </div>
+                  <div style="background: rgba(255,255,255,0.03); padding: 1.25rem; border-radius: 8px;">
+                    <strong style="color: var(--accent-blue); display: block; margin-bottom: 0.5rem;">Victim</strong>
+                    <span style="font-size: 0.95rem;">The target "where" the attack was performed—a person, organization, IP address, domain, or email.</span>
+                  </div>
+                  <div style="background: rgba(255,255,255,0.03); padding: 1.25rem; border-radius: 8px;">
+                    <strong style="color: var(--accent-green); display: block; margin-bottom: 0.5rem;">Capability</strong>
+                    <span style="font-size: 0.95rem;">"How" the attack was performed—strategies, tools, and techniques (e.g., brute forcing, ransomware).</span>
+                  </div>
+                  <div style="background: rgba(255,255,255,0.03); padding: 1.25rem; border-radius: 8px;">
+                    <strong style="color: var(--accent-purple); display: block; margin-bottom: 0.5rem;">Infrastructure</strong>
+                    <span style="font-size: 0.95rem;">"What" the adversary used to reach the victim—hardware, software, C2 servers, email servers.</span>
+                  </div>
+                </div>
+                <p style="font-size: 0.95rem;"><strong>Extended Model:</strong> Adds <em>socio-political</em> meta-features (adversary-victim relationship, motivation) and <em>technology</em> meta-features (infrastructure-capability relationship). Additional event meta-features include timestamp, phase, result, direction, methodology, and resources.</p>
+              </div>
+
+              <!-- Indicators of Compromise -->
+              <h3 style="color: #fff; margin-top: 3rem;">Indicators of Compromise (IoCs)</h3>
+              <p>IoCs are clues, artifacts, and forensic data found on a network or OS that indicate a potential intrusion or malicious activity. They are divided into four categories:</p>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.5rem 0;">
+                <div style="padding: 1rem; background: rgba(0,0,0,0.3); border-radius: 6px;"><strong style="color: var(--accent-blue);">Email Indicators</strong><br><span style="font-size: 0.9rem;">Sender address, subject lines, malicious attachments or links.</span></div>
+                <div style="padding: 1rem; background: rgba(0,0,0,0.3); border-radius: 6px;"><strong style="color: var(--accent-purple);">Network Indicators</strong><br><span style="font-size: 0.9rem;">Malicious URLs, domain names, suspicious IP addresses.</span></div>
+                <div style="padding: 1rem; background: rgba(0,0,0,0.3); border-radius: 6px;"><strong style="color: var(--accent-red);">Host-Based Indicators</strong><br><span style="font-size: 0.9rem;">Filenames, file hashes, registry keys, DLLs, mutex objects.</span></div>
+                <div style="padding: 1rem; background: rgba(0,0,0,0.3); border-radius: 6px;"><strong style="color: var(--accent-green);">Behavioral Indicators</strong><br><span style="font-size: 0.9rem;">Code injection into memory, scripts running from applications, unusual PowerShell execution.</span></div>
+              </div>
+              <p style="font-size: 0.95rem;"><strong>Key IoCs to monitor:</strong> Unusual outbound traffic, privileged account anomalies, geographical anomalies, multiple login failures, increased database reads, mismatched port-application traffic, suspicious registry changes, unusual DNS requests, and signs of DDoS activity.</p>
+
+              <!-- Adversary Behavioral Identification -->
+              <h3 style="color: #fff; margin-top: 3rem;">Adversary Behavioral Identification</h3>
+              <p>Identifying common adversary behaviors enhances detection capabilities. Key behaviors to monitor include:</p>
+              <ul style="font-size: 0.95rem;">
+                <li><strong>Internal Reconnaissance:</strong> Enumeration of systems, hosts, processes, and unusual Batch/PowerShell commands.</li>
+                <li><strong>Use of PowerShell:</strong> Automating data exfiltration; detected by checking transcript logs and Windows Event logs.</li>
+                <li><strong>Unspecified Proxy Activities:</strong> Multiple domains pointing to the same host for quick switching to avoid detection.</li>
+                <li><strong>Command-Line Interface Abuse:</strong> Browsing files, modifying content, creating accounts, and downloading malware via CLI.</li>
+                <li><strong>HTTP User Agent Modification:</strong> Altering user agent fields to communicate with compromised systems.</li>
+                <li><strong>C2 Server Communication:</strong> Encrypted outbound connections to adversary-controlled infrastructure.</li>
+                <li><strong>DNS Tunneling:</strong> Obfuscating malicious traffic within legitimate DNS requests for data exfiltration.</li>
+                <li><strong>Web Shell Deployment:</strong> Creating shells within websites for remote server access and file manipulation.</li>
+                <li><strong>Data Staging:</strong> Collecting and combining sensitive data before exfiltration or destruction.</li>
+              </ul>
+
+              <!-- Section 7 -->
+              <div class="glass-card" style="padding: 3rem; margin: 4rem 0; border-top: 4px solid #fff;">
+                <h2 style="margin-top: 0; color: #fff; font-size: 2rem;">7. Information Security Controls</h2>
+                <p>Information security controls prevent unwanted events and reduce risk to an organization's information assets. The core concepts critical to information security are confidentiality, integrity, and availability; the concepts related to access are authentication, authorization, and non-repudiation.</p>
+                
+                <h3 style="color: #fff;">Information Assurance (IA)</h3>
+                <p>IA refers to the assurance of integrity, availability, confidentiality, and authenticity of information during usage, processing, storage, and transmission. Key processes include:</p>
+                <ul style="font-size: 0.95rem;">
+                  <li>Developing local policy and guidance to maintain systems at optimal security levels</li>
+                  <li>Designing network and user authentication strategies</li>
+                  <li>Identifying network vulnerabilities and threats through regular assessments</li>
+                  <li>Applying appropriate information assurance controls</li>
+                  <li>Performing Certification and Accreditation (C&amp;A) of information systems</li>
+                </ul>
+
+                <h3 style="color: #fff; margin-top: 2rem;">Continual/Adaptive Security Strategy</h3>
+                <p>Organizations should adopt an adaptive security strategy involving four continuous activities:</p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.5rem 0;">
+                  <div style="background: rgba(0,240,255,0.05); padding: 1.25rem; border-radius: 8px; border-left: 3px solid var(--accent-blue);">
+                    <strong style="color: var(--accent-blue);">01 — Protection</strong>
+                    <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem;">Defense-in-depth strategies, endpoint/network/data protection, security policies, firewalls, and IDS.</p>
+                  </div>
+                  <div style="background: rgba(0,240,255,0.05); padding: 1.25rem; border-radius: 8px; border-left: 3px solid var(--accent-green);">
+                    <strong style="color: var(--accent-green);">02 — Detection</strong>
+                    <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem;">Continuous threat monitoring, network traffic analysis, and packet sniffing to identify abnormalities.</p>
+                  </div>
+                  <div style="background: rgba(0,240,255,0.05); padding: 1.25rem; border-radius: 8px; border-left: 3px solid var(--accent-red);">
+                    <strong style="color: var(--accent-red);">03 — Response</strong>
+                    <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem;">Incident response, investigation, containment, impact mitigation, and eradication of root causes.</p>
+                  </div>
+                  <div style="background: rgba(0,240,255,0.05); padding: 1.25rem; border-radius: 8px; border-left: 3px solid var(--accent-purple);">
+                    <strong style="color: var(--accent-purple);">04 — Prediction</strong>
+                    <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem;">Risk and vulnerability assessment, attack surface analysis, and consuming threat intelligence data.</p>
+                  </div>
+                </div>
+
+                <h3 style="color: #fff; margin-top: 2rem;">Defense-in-Depth</h3>
+                <p>A security strategy using multiple protection layers throughout an information system. If one layer fails, another prevents the threat from reaching its target. Layers include:</p>
+                <ul>
+                  <li>Policies, Procedures, and Awareness</li>
+                  <li>Physical Security</li>
+                  <li>Perimeter Security (Firewalls, IPS/IDS)</li>
+                  <li>Internal Network Security (VLANs, NAC)</li>
+                  <li>Host Security (Antivirus, EDR, OS hardening)</li>
+                  <li>Application Security (WAF, Code Review)</li>
+                  <li>Data Security (Encryption, DLP)</li>
+                </ul>
+
+                <h3 style="color: #fff; margin-top: 2rem;">Risk Management</h3>
+                <p>Risk management is the process of identifying, assessing, responding to, and implementing controls to manage potential effects of risk. <strong>RISK = Threat × Vulnerability × Asset Value</strong>.</p>
+                <p>Risk levels range from <em>Extreme</em> (immediate action required) to <em>Low</em> (preventive steps). The four key phases are:</p>
+                <ol style="font-size: 0.95rem;">
+                  <li><strong>Risk Identification:</strong> Identify sources, causes, and consequences of internal/external risks before they cause harm.</li>
+                  <li><strong>Risk Assessment:</strong> Assess the likelihood and impact of identified risks; assign priorities for mitigation.</li>
+                  <li><strong>Risk Treatment:</strong> Select and implement appropriate controls based on severity, cost, and likelihood of success.</li>
+                  <li><strong>Risk Tracking &amp; Review:</strong> Ensure appropriate controls are in place, monitor for new risks, and evaluate strategy performance.</li>
+                </ol>
+              </div>
+
+              <!-- Cyber Threat Intelligence -->
+              <div class="glass-card" style="padding: 3rem; margin: 3rem 0; border-left: 4px solid var(--accent-blue);">
+                <h3 style="margin-top: 0; color: #fff; font-size: 1.5rem;">Cyber Threat Intelligence (CTI)</h3>
+                <p>CTI is the collection and analysis of information about threats and adversaries, drawing patterns that provide the ability to make knowledgeable decisions for preparedness, prevention, and response against cyberattacks. It converts unknown threats into known threats.</p>
+                <h4 style="color: var(--accent-blue);">Types of Threat Intelligence</h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0;">
+                  <div style="background: rgba(0,0,0,0.3); padding: 1.25rem; border-radius: 8px;">
+                    <strong style="color: #fff;">Strategic</strong>
+                    <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem;">High-level information on changing risks, attack trends, and financial impact. Consumed by executives and CISO.</p>
+                  </div>
+                  <div style="background: rgba(0,0,0,0.3); padding: 1.25rem; border-radius: 8px;">
+                    <strong style="color: #fff;">Tactical</strong>
+                    <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem;">Information on attacker TTPs—malware, campaigns, techniques. Consumed by IT/SOC managers and administrators.</p>
+                  </div>
+                  <div style="background: rgba(0,0,0,0.3); padding: 1.25rem; border-radius: 8px;">
+                    <strong style="color: #fff;">Operational</strong>
+                    <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem;">Information on specific incoming attacks, attacker methodologies, and past malicious activities. Consumed by security managers and network defenders.</p>
+                  </div>
+                  <div style="background: rgba(0,0,0,0.3); padding: 1.25rem; border-radius: 8px;">
+                    <strong style="color: #fff;">Technical</strong>
+                    <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem;">Specific indicators of compromise—malicious IPs, domains, file hashes. Consumed by SOC staff and IR teams.</p>
+                  </div>
+                </div>
+                <h4 style="color: var(--accent-blue);">Threat Intelligence Lifecycle</h4>
+                <ol style="font-size: 0.95rem;">
+                  <li><strong>Planning &amp; Direction:</strong> Define intelligence requirements, form the team, and create a collection plan.</li>
+                  <li><strong>Collection:</strong> Gather data from OSINT, HUMINT, IMINT, SIGINT, and other sources.</li>
+                  <li><strong>Processing &amp; Exploitation:</strong> Convert raw data into usable format using structuring, decryption, parsing, and filtering.</li>
+                  <li><strong>Analysis &amp; Production:</strong> Combine sources, apply reasoning techniques, and elevate analyzed information to actionable intelligence.</li>
+                  <li><strong>Dissemination &amp; Integration:</strong> Deliver intelligence at strategic, tactical, operational, and technical levels. Collect feedback to improve the cycle.</li>
+                </ol>
+              </div>
+
+              <!-- Threat Modeling -->
+              <h3 style="color: #fff; margin-top: 3rem;">Threat Modeling</h3>
+              <p>A risk assessment approach for analyzing application security by capturing, organizing, and analyzing all relevant information. The five-step process:</p>
+              <ol style="font-size: 0.95rem;">
+                <li><strong>Identify Security Objectives:</strong> Define goals for confidentiality, integrity, and availability. Determine compliance requirements.</li>
+                <li><strong>Application Overview:</strong> Identify components, data flows, trust boundaries, roles, key usage scenarios, technologies, and security mechanisms.</li>
+                <li><strong>Decompose the Application:</strong> Break down trust boundaries, data flows, entry points, and exit points to find detailed threats.</li>
+                <li><strong>Identify Threats:</strong> Use question-driven approaches and frameworks like <strong>STRIDE</strong> to identify threats:
+                  <ul style="margin-top: 0.5rem;">
+                    <li><strong>S</strong>poofing Identity (Authenticity)</li>
+                    <li><strong>T</strong>ampering with Data (Integrity)</li>
+                    <li><strong>R</strong>epudiation (Non-Repudiation)</li>
+                    <li><strong>I</strong>nformation Disclosure (Confidentiality)</li>
+                    <li><strong>D</strong>enial of Service (Availability)</li>
+                    <li><strong>E</strong>levation of Privilege (Authorization)</li>
+                  </ul>
+                </li>
+                <li><strong>Identify Vulnerabilities:</strong> Find weaknesses related to the identified threats using vulnerability categories.</li>
+              </ol>
+
+              <!-- Incident Management -->
+              <div class="glass-card" style="padding: 3rem; margin: 3rem 0; border-left: 4px solid var(--accent-red);">
+                <h3 style="margin-top: 0; color: #fff; font-size: 1.5rem;">Incident Management &amp; Response</h3>
+                <p>Incident management is a set of defined processes to identify, analyze, prioritize, and resolve security incidents to restore normal operations and prevent recurrence. Incident Handling and Response (IH&amp;R) involves organized, careful steps when reacting to a security incident.</p>
+                <h4 style="color: var(--accent-red);">IH&amp;R Process Steps</h4>
+                <div style="display: flex; flex-direction: column; gap: 0.75rem; margin: 1rem 0; font-size: 0.95rem;">
+                  <div style="display: flex; gap: 1rem; align-items: center; background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 6px;"><strong style="color: var(--accent-red); min-width: 25px;">1.</strong> <span><strong>Preparation</strong> — Audit resources, define policies, build and train the incident response team.</span></div>
+                  <div style="display: flex; gap: 1rem; align-items: center; background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 6px;"><strong style="color: var(--accent-red); min-width: 25px;">2.</strong> <span><strong>Incident Recording</strong> — Initial reporting, recording, and assigning the incident with proper communication plans.</span></div>
+                  <div style="display: flex; gap: 1rem; align-items: center; background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 6px;"><strong style="color: var(--accent-red); min-width: 25px;">3.</strong> <span><strong>Incident Triage</strong> — Analyze, validate, categorize, and prioritize based on attack type, severity, and impact.</span></div>
+                  <div style="display: flex; gap: 1rem; align-items: center; background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 6px;"><strong style="color: var(--accent-red); min-width: 25px;">4.</strong> <span><strong>Notification</strong> — Inform stakeholders including management, vendors, and clients.</span></div>
+                  <div style="display: flex; gap: 1rem; align-items: center; background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 6px;"><strong style="color: var(--accent-red); min-width: 25px;">5.</strong> <span><strong>Containment</strong> — Prevent the spread of infection to other organizational assets.</span></div>
+                  <div style="display: flex; gap: 1rem; align-items: center; background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 6px;"><strong style="color: var(--accent-red); min-width: 25px;">6.</strong> <span><strong>Evidence Gathering &amp; Forensics</strong> — Collect evidence and submit for investigation.</span></div>
+                  <div style="display: flex; gap: 1rem; align-items: center; background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 6px;"><strong style="color: var(--accent-red); min-width: 25px;">7.</strong> <span><strong>Eradication</strong> — Remove root cause and close all attack vectors.</span></div>
+                  <div style="display: flex; gap: 1rem; align-items: center; background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 6px;"><strong style="color: var(--accent-red); min-width: 25px;">8.</strong> <span><strong>Recovery</strong> — Restore affected systems, services, and data.</span></div>
+                  <div style="display: flex; gap: 1rem; align-items: center; background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 6px;"><strong style="color: var(--accent-red); min-width: 25px;">9.</strong> <span><strong>Post-Incident Activities</strong> — Documentation, impact assessment, policy revision, investigation closure, and disclosure.</span></div>
+                </div>
+              </div>
+
+              <!-- AI/ML in Cybersecurity -->
+              <h3 style="color: #fff; margin-top: 3rem;">Role of AI &amp; Machine Learning in Cybersecurity</h3>
+              <p>ML is an unsupervised self-learning system that defines what a normal network looks like and reports deviations or anomalies in real-time. AI and ML help identify new exploits and weaknesses for faster mitigation.</p>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; font-size: 0.95rem;">
+                <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 6px;"><strong>Supervised Learning</strong> — Algorithms using labeled training data to learn differences between labels. Includes classification and regression.</div>
+                <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 6px;"><strong>Unsupervised Learning</strong> — Algorithms using unlabeled data to deduce categories. Includes clustering and dimensionality reduction.</div>
+              </div>
+              <p><strong>How AI/ML Prevent Cyber Attacks:</strong></p>
+              <ul style="font-size: 0.95rem;">
+                <li><strong>Password Protection &amp; Authentication:</strong> AI improves biometric validations and face recognition.</li>
+                <li><strong>Phishing Detection:</strong> AI/ML scan and identify phishing emails faster than humans and differentiate malicious from legitimate websites.</li>
+                <li><strong>Threat Detection:</strong> ML constantly analyzes data to notify admins of imminent threats before systems are compromised.</li>
+                <li><strong>Vulnerability Management:</strong> AI dynamically scans for vulnerabilities and predicts when exploitation might occur.</li>
+                <li><strong>Behavioral Analytics:</strong> AI generates user patterns and alerts on suspicious deviations from normal usage.</li>
+                <li><strong>Network Security:</strong> AI analyzes traffic and proposes efficient security policies by default.</li>
+                <li><strong>AI-Based Antivirus:</strong> Uses anomaly detection instead of signature matching to detect suspicious program behavior.</li>
+                <li><strong>Fraud &amp; Botnet Detection:</strong> ML algorithms identify fraudulent transactions and detect unauthorized intrusions that bypass traditional IDS.</li>
+              </ul>
+
+              <!-- Section 8 -->
+              <h2 style="color: #fff; font-size: 2rem; margin-top: 4rem;">8. Information Security Laws and Standards</h2>
+              <p>Laws are a system of rules enforced by a particular country or community to govern behavior. A Standard is a document established by consensus and approved by a recognized body that provides rules, guidelines, or characteristics for activities. Ethical hackers must operate strictly within legal boundaries.</p>
+
+              <div style="display: flex; flex-direction: column; gap: 2rem; margin-top: 2rem;">
+                <!-- PCI-DSS -->
+                <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 2rem; border-radius: 8px;">
+                  <h3 style="margin-top: 0; color: var(--accent-blue);">Payment Card Industry Data Security Standard (PCI DSS)</h3>
+                  <p style="font-size: 0.95rem;">A proprietary information security standard for organizations handling cardholder information for major debit, credit, prepaid, ATM, and POS cards. It applies to all entities involved in payment card processing. Failure to meet requirements may result in fines or termination of processing privileges.</p>
+                  <strong style="color: #fff; font-size: 0.9rem; text-transform: uppercase;">Key Requirements:</strong>
+                  <ul style="font-size: 0.95rem; margin-bottom: 0;">
+                    <li>Build and Maintain a Secure Network (Firewalls, no vendor defaults)</li>
+                    <li>Protect Cardholder Data (Encryption at rest and in transit)</li>
+                    <li>Maintain a Vulnerability Management Program (Antivirus, secure systems)</li>
+                    <li>Implement Strong Access Control Measures (Unique IDs, physical restrictions)</li>
+                    <li>Regularly Monitor and Test Networks</li>
+                    <li>Maintain an Information Security Policy</li>
+                  </ul>
+                </div>
+
+                <!-- ISO/IEC -->
+                <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 2rem; border-radius: 8px;">
+                  <h3 style="margin-top: 0; color: var(--accent-purple);">ISO/IEC Standards</h3>
+                  <p style="font-size: 0.95rem;">International standards for security management and implementation.</p>
+                  <ul style="font-size: 0.95rem; margin-bottom: 0;">
+                    <li><strong style="color: #fff;">ISO/IEC 27001:2022</strong> — The framework for establishing, implementing, and continually improving an Information Security Management System (ISMS).</li>
+                    <li><strong style="color: #fff;">ISO/IEC 27701:2019</strong> — Extends 27001 to include privacy management and protection of Personally Identifiable Information (PII).</li>
+                    <li><strong style="color: #fff;">ISO/IEC 27002:2022</strong> — Outlines best practices and control objectives for cybersecurity (access control, cryptography).</li>
+                    <li><strong style="color: #fff;">ISO/IEC 27018:2019</strong> — Code of practice for protecting PII in public cloud environments.</li>
+                  </ul>
+                </div>
+
+                <!-- HIPAA -->
+                <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 2rem; border-radius: 8px;">
+                  <h3 style="margin-top: 0; color: var(--accent-green);">Health Insurance Portability and Accountability Act (HIPAA)</h3>
+                  <p style="font-size: 0.95rem;">Provides federal protections for individually identifiable health information held by covered entities and business associates. Key rules include:</p>
+                  <ul style="font-size: 0.95rem; margin-bottom: 0;">
+                    <li><strong>Privacy Rule:</strong> National standards to protect medical records and personal health information.</li>
+                    <li><strong>Security Rule:</strong> Requires administrative, physical, and technical safeguards for electronically protected health information (ePHI).</li>
+                    <li><strong>National Provider Identifier (NPI):</strong> A unique 10-digit identification number for covered health care providers.</li>
+                  </ul>
+                </div>
+
+                <!-- SOX -->
+                <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 2rem; border-radius: 8px;">
+                  <h3 style="margin-top: 0; color: #d4af37;">Sarbanes-Oxley Act (SOX)</h3>
+                  <p style="font-size: 0.95rem; margin-bottom: 0;">Enacted in 2002 to protect investors and the public by increasing the accuracy and reliability of corporate disclosures. It mandates reforms to enhance corporate responsibility, enhance financial disclosures, and combat accounting fraud. Title III requires senior executives to take individual responsibility for the accuracy of financial reports, and Title IV mandates internal controls to ensure report accuracy.</p>
+                </div>
+
+                <!-- GDPR -->
+                <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 2rem; border-radius: 8px;">
+                  <h3 style="margin-top: 0; color: var(--accent-red);">General Data Protection Regulation (GDPR)</h3>
+                  <p style="font-size: 0.95rem;">One of the most stringent privacy and security laws globally, implemented by the EU in 2018. It imposes obligations on organizations anywhere in the world if they collect data related to people in the EU, levying fines reaching tens of millions of euros for violations.</p>
+                  <strong style="color: #fff; font-size: 0.9rem; text-transform: uppercase;">Data Protection Principles:</strong>
+                  <ul style="font-size: 0.95rem; margin-bottom: 0;">
+                    <li>Lawfulness, fairness, and transparency</li>
+                    <li>Purpose limitation (legitimate purposes only)</li>
+                    <li>Data minimization (only as much data as necessary)</li>
+                    <li>Accuracy (keep data up to date)</li>
+                    <li>Storage limitation (store only as long as necessary)</li>
+                    <li>Integrity and confidentiality (encryption)</li>
+                    <li>Accountability (demonstrating compliance)</li>
+                  </ul>
+                </div>
+
+                <!-- DMCA & FISMA & DPA -->
+                <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 2rem; border-radius: 8px;">
+                  <h3 style="margin-top: 0; color: #888;">Additional Key Legislation</h3>
+                  <ul style="font-size: 0.95rem; margin-bottom: 0; display: flex; flex-direction: column; gap: 1rem;">
+                    <li><strong style="color: #fff;">DMCA (Digital Millennium Copyright Act):</strong> Defines legal prohibitions against circumvention of technological protection measures employed by copyright owners.</li>
+                    <li><strong style="color: #fff;">FISMA (Federal Information Security Management Act):</strong> A comprehensive framework for ensuring the effectiveness of information security controls over federal operations and assets in the US.</li>
+                    <li><strong style="color: #fff;">DPA 2018 (Data Protection Act):</strong> The UK framework for data protection law, updated to replace the 1998 act and reflecting the UK's status outside the EU post-GDPR.</li>
+                  </ul>
+                </div>
+              </div>
+
+            </div>
+            
+            <div style="margin-top: 5rem; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 2rem;">
+               <a href="/education" class="btn" style="text-decoration: none; padding: 1rem 2rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; color: #fff; display: flex; align-items: center; gap: 0.5rem; font-weight: bold; transition: all 0.2s;">
+                 <span>&larr;</span> Back to Curriculum
+               </a>
+               <div style="text-align: right;">
+                 <span style="color: #888; font-size: 0.95rem; display: block; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 1px;">Next Module</span>
+                 <span style="color: #fff; cursor: not-allowed; opacity: 0.5; font-size: 1.1rem; font-weight: bold;">Footprinting & Reconnaissance &rarr;</span>
+               </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    `
+  }));
+});
+
 app.get('/post/:slug', async (c) => {
   const slug = c.req.param('slug');
   const post = await safePosts(() => getPostBySlug(c.env.DB, slug), null as PostWithTags | null);
@@ -306,6 +1088,7 @@ app.get('/sitemap.xml', async (c) => {
     { loc: '/news', changefreq: 'hourly', priority: '0.9' },
     { loc: '/blog', changefreq: 'daily', priority: '0.8' },
     { loc: '/articles', changefreq: 'daily', priority: '0.8' },
+    { loc: '/education', changefreq: 'weekly', priority: '0.8' },
     { loc: '/archive', changefreq: 'daily', priority: '0.7' },
   ];
 
