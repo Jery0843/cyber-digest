@@ -328,23 +328,15 @@ app.get('/sitemap.xml', async (c) => {
 
   xml += `</urlset>`;
 
-  return new Response(xml, {
-    status: 200,
-    headers: {
-      'Content-Type': 'application/xml; charset=UTF-8',
-      'Cache-Control': 'public, max-age=3600',
-    },
+  return c.body(xml, 200, {
+    'content-type': 'application/xml; charset=UTF-8',
+    'cache-control': 'public, max-age=3600'
   });
 });
 
 app.get('/robots.txt', (c) => {
   const origin = new URL(c.req.url).origin;
-  return new Response(`User-agent: *\nAllow: /\n\nSitemap: ${origin}/sitemap.xml\n`, {
-    status: 200,
-    headers: {
-      'Content-Type': 'text/plain; charset=UTF-8',
-    },
-  });
+  return c.text(`User-agent: *\nAllow: /\n\nSitemap: ${origin}/sitemap.xml\n`);
 });
 
 export const onRequest = handle(app);
