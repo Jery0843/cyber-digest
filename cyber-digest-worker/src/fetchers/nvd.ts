@@ -3,14 +3,14 @@ import type { CyberEvent } from '../types';
 export async function fetchNVD(apiKey?: string): Promise<CyberEvent[]> {
   const events: CyberEvent[] = [];
   try {
-    // Fetch last 48 hours to account for timezone differences and delayed publishing
+    // Fetch last 24 hours for same-day freshness
     const now = new Date();
-    const twoDaysAgo = new Date(now.getTime() - (48 * 60 * 60 * 1000));
+    const oneDayAgo = new Date(now.getTime() - (24 * 60 * 60 * 1000));
     
     // NVD requires specific date format: YYYY-MM-DDTHH:MM:SS.000
     const formatNvdDate = (d: Date) => d.toISOString().replace(/\.\d+Z$/, '.000');
     
-    const url = `https://services.nvd.nist.gov/rest/json/cves/2.0?pubStartDate=${formatNvdDate(twoDaysAgo)}&pubEndDate=${formatNvdDate(now)}&resultsPerPage=50`;
+    const url = `https://services.nvd.nist.gov/rest/json/cves/2.0?pubStartDate=${formatNvdDate(oneDayAgo)}&pubEndDate=${formatNvdDate(now)}&resultsPerPage=50`;
     
     const headers: Record<string, string> = {
       'User-Agent': 'CyberDigest/1.0',

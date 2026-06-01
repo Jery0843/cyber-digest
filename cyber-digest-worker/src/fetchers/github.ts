@@ -14,10 +14,10 @@ export async function fetchGitHubAdvisories(token?: string): Promise<CyberEvent[
     }
 
     const now = new Date();
-    const twoDaysAgo = new Date(now.getTime() - (48 * 60 * 60 * 1000));
+    const oneDayAgo = new Date(now.getTime() - (24 * 60 * 60 * 1000));
     
     // GitHub API ISO format
-    const publishedSince = twoDaysAgo.toISOString();
+    const publishedSince = oneDayAgo.toISOString();
     
     const response = await fetch(`https://api.github.com/advisories?type=reviewed&published:>${publishedSince}&per_page=30`, { headers });
     

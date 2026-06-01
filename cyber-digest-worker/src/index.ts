@@ -35,8 +35,10 @@ export default {
         fetchRSSFeeds()
       ]);
 
+      console.log(`[Sources] NVD: ${nvdEvents.length} | CISA: ${cisaEvents.length} | GitHub: ${ghEvents.length} | RSS: ${rssEvents.length}`);
+
       let allEvents = [...nvdEvents, ...cisaEvents, ...ghEvents, ...rssEvents];
-      console.log(`Collected ${allEvents.length} raw events.`);
+      console.log(`[Pipeline] Total raw events from all sources: ${allEvents.length}`);
 
       // Filter out events that we have already published recently
       const recentUrls = await getRecentSourceUrls(env);
@@ -52,9 +54,37 @@ export default {
       // 2. Normalization & Deduplication & Ranking
       allEvents = await normalizeEvents(allEvents);
       allEvents = deduplicateEvents(allEvents);
+
+      // 2.5 Strict freshness gate — prefer same-day (24h), fallback to 48h
+      const now = new Date();
+      const oneDayAgo = new Date(now.getTime() - (24 * 60 * 60 * 1000));
+      const twoDaysAgo = new Date(now.getTime() - (48 * 60 * 60 * 1000));
+
+      const freshEvents = allEvents.filter(e => {
+        const d = new Date(e.event_date);
+        return !isNaN(d.getTime()) && d >= oneDayAgo;
+      });
+
+      if (freshEvents.length > 0) {
+        allEvents = freshEvents;
+        console.log(`Freshness gate: ${freshEvents.length} events from last 24h — using these.`);
+      } else {
+        // Fallback: use up to 48h events but log a warning
+        const fallbackEvents = allEvents.filter(e => {
+          const d = new Date(e.event_date);
+          return !isNaN(d.getTime()) && d >= twoDaysAgo;
+        });
+        allEvents = fallbackEvents;
+        console.warn(`Freshness gate: 0 events in last 24h. Falling back to ${fallbackEvents.length} events from last 48h.`);
+      }
+
+      if (allEvents.length === 0) {
+        console.log('No fresh events remaining after freshness gate. Skipping generation.');
+        await logGeneration(env, 'skipped', 0, 'No fresh events (within 24-48h window)');
+        return;
+      }
+
       const rankedEvents = rankEvents(allEvents);
-      
-      console.log(`Pipeline yielded ${rankedEvents.length} unique ranked topics.`);
 
       // 3 & 4. Topic Selection & Generation with Fallback
       let remainingEvents = [...rankedEvents];

@@ -14,10 +14,10 @@ export async function fetchCISA(): Promise<CyberEvent[]> {
 
     const data: any = await response.json();
     
-    // We only want recently added CISA KEV entries (last 48 hours)
+    // We only want recently added CISA KEV entries (last 24 hours)
     const now = new Date();
-    const twoDaysAgo = new Date(now.getTime() - (48 * 60 * 60 * 1000));
-    const recentThreshold = twoDaysAgo.toISOString().split('T')[0];
+    const oneDayAgo = new Date(now.getTime() - (24 * 60 * 60 * 1000));
+    const recentThreshold = oneDayAgo.toISOString().split('T')[0];
 
     if (data.vulnerabilities && Array.isArray(data.vulnerabilities)) {
       const recentVulns = data.vulnerabilities.filter((v: any) => v.dateAdded >= recentThreshold);

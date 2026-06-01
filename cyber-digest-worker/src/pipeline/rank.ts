@@ -27,17 +27,21 @@ export function rankEvents(events: CyberEvent[]): ScoredEvent[] {
       score += 15;
     }
 
-    // 4. Freshness
+    // 4. Freshness (heavily weighted — we MUST prioritize same-day content)
     const eventDate = new Date(event.event_date);
     const now = new Date();
     const hoursOld = (now.getTime() - eventDate.getTime()) / (1000 * 60 * 60);
     
-    if (hoursOld < 12) {
-      score += 15;
+    if (hoursOld < 6) {
+      score += 30;   // Breaking / very fresh
+    } else if (hoursOld < 12) {
+      score += 25;   // Same-day, recent
     } else if (hoursOld < 24) {
-      score += 10;
-    } else if (hoursOld < 48) {
-      score += 5;
+      score += 15;   // Within the last day
+    } else if (hoursOld < 36) {
+      score += 0;    // Stale — no bonus
+    } else {
+      score -= 10;   // Old — actively penalized
     }
 
     return {

@@ -65,8 +65,9 @@ export async function logGeneration(env: Env, status: string, postsCreated: numb
 export async function getRecentSourceUrls(env: Env): Promise<Set<string>> {
   try {
     const results = await env.DB.prepare(`
-      SELECT source_url FROM post_sources 
-      WHERE created_at > datetime('now', '-3 days')
+      SELECT ps.source_url FROM post_sources ps
+      JOIN posts p ON ps.post_id = p.id
+      WHERE p.published_at > datetime('now', '-3 days')
     `).all<{ source_url: string }>();
     
     return new Set(results.results.map(r => r.source_url));
