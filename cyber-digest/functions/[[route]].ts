@@ -74,6 +74,7 @@ function sidebar(currentPath: string): string {
       <a href="/blog" class="sidebar__link ${isActive('/blog')}"><span class="icon">📝</span> Reports</a>
       <a href="/articles" class="sidebar__link ${isActive('/articles')}"><span class="icon">📚</span> Global Threats</a>
       <a href="/archive" class="sidebar__link ${isActive('/archive')}"><span class="icon">🗄️</span> Resources</a>
+      <a href="https://0xjerry.jerome.co.in" class="sidebar__link" target="_blank" rel="noopener noreferrer"><span class="icon">⌬</span> 0xJerry's Lab</a>
     </nav>
     <div class="sidebar__footer">
       <a href="/rss.xml" class="sidebar__link"><span class="icon">📡</span> RSS Feed</a>
