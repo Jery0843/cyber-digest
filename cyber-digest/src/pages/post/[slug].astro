@@ -21,7 +21,7 @@ function formatDate(d: string) {
 const relatedPosts = await getPostsByType(db, post.type, 3, 0);
 const related = relatedPosts.filter(p => p.slug !== post.slug).slice(0, 2);
 
-const siteUrl = 'https://cyberdigest.pages.dev';
+const siteUrl = 'https://digest.jerome.co.in';
 const jsonLd = JSON.stringify({
   '@context': 'https://schema.org',
   '@type': 'Article',

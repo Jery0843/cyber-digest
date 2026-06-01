@@ -8,5 +8,5 @@ export default defineConfig({
   adapter: cloudflare({
     remoteBindings: false,
   }),
-  site: 'https://cyberdigest.pages.dev',
+  site: 'https://digest.jerome.co.in',
 });

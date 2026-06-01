@@ -5,7 +5,7 @@ import { getDB } from '../lib/env';
 export const GET: APIRoute = async () => {
   const db = getDB();
   const posts = db ? await getLatestPosts(db, 50) : [];
-  const siteUrl = 'https://cyberdigest.pages.dev';
+  const siteUrl = 'https://digest.jerome.co.in';
 
   const items = posts.map(p => `
     <item>

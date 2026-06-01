@@ -4,7 +4,7 @@ export const GET: APIRoute = async () => {
   const body = `User-agent: *
 Allow: /
 
-Sitemap: https://cyberdigest.pages.dev/sitemap.xml
+Sitemap: https://digest.jerome.co.in/sitemap.xml
 `;
   return new Response(body, {
     headers: { 'Content-Type': 'text/plain; charset=utf-8' },

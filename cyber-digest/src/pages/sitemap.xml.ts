@@ -4,7 +4,7 @@ import { getDB } from '../lib/env';
 
 export const GET: APIRoute = async () => {
   const db = getDB();
-  const siteUrl = 'https://cyberdigest.pages.dev';
+  const siteUrl = 'https://digest.jerome.co.in';
   const now = new Date().toISOString().split('T')[0];
 
   let postUrls = '';

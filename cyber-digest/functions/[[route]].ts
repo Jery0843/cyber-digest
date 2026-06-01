@@ -18,7 +18,7 @@ type Bindings = AppEnv;
 type HonoEnv = { Bindings: Bindings };
 
 const app = new Hono<HonoEnv>();
-const siteUrl = 'https://cyberdigest.pages.dev';
+const siteUrl = 'https://digest.jerome.co.in';
 
 function escapeHtml(value: unknown): string {
   return String(value ?? '')
@@ -294,14 +294,57 @@ app.get('/rss.xml', async (c) => {
 
 app.get('/sitemap.xml', async (c) => {
   const [posts, tags] = await Promise.all([
-    safePosts(() => getLatestPosts(c.env.DB, 200), [] as Post[]),
+    safePosts(() => getLatestPosts(c.env.DB, 1000), [] as Post[]),
     safePosts(() => getAllTags(c.env.DB), [] as { name: string; count: number }[]),
   ]);
-  const staticUrls = ['/', '/news', '/blog', '/articles', '/archive'];
-  const urls = [...staticUrls.map((path) => `${siteUrl}${path}`), ...posts.map((post) => `${siteUrl}/post/${encodeURIComponent(post.slug)}`), ...tags.map((tag) => `${siteUrl}/tags/${encodeURIComponent(tag.name)}`)];
-  return c.body(`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls.map((url) => `<url><loc>${escapeHtml(url)}</loc></url>`).join('')}</urlset>`, 200, { 'content-type': 'application/xml; charset=UTF-8' });
+  
+  const origin = new URL(c.req.url).origin;
+  const now = new Date().toISOString();
+
+  const staticPages = [
+    { loc: '/', changefreq: 'hourly', priority: '1.0' },
+    { loc: '/news', changefreq: 'hourly', priority: '0.9' },
+    { loc: '/blog', changefreq: 'daily', priority: '0.8' },
+    { loc: '/articles', changefreq: 'daily', priority: '0.8' },
+    { loc: '/archive', changefreq: 'daily', priority: '0.7' },
+  ];
+
+  let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
+  xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">\n`;
+
+  for (const page of staticPages) {
+    xml += `  <url>\n    <loc>${escapeHtml(origin + page.loc)}</loc>\n    <lastmod>${now}</lastmod>\n    <changefreq>${page.changefreq}</changefreq>\n    <priority>${page.priority}</priority>\n  </url>\n`;
+  }
+
+  for (const post of posts) {
+    const pubDate = new Date(post.published_at);
+    const lastmod = Number.isNaN(pubDate.getTime()) ? now : pubDate.toISOString();
+    xml += `  <url>\n    <loc>${escapeHtml(origin + '/post/' + encodeURIComponent(post.slug))}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>never</changefreq>\n    <priority>0.6</priority>\n  </url>\n`;
+  }
+
+  for (const tag of tags) {
+    xml += `  <url>\n    <loc>${escapeHtml(origin + '/tags/' + encodeURIComponent(tag.name))}</loc>\n    <lastmod>${now}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.5</priority>\n  </url>\n`;
+  }
+
+  xml += `</urlset>`;
+
+  return new Response(xml, {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/xml; charset=UTF-8',
+      'Cache-Control': 'public, max-age=3600',
+    },
+  });
 });
 
-app.get('/robots.txt', (c) => c.text(`User-agent: *\nAllow: /\nSitemap: ${siteUrl}/sitemap.xml\n`));
+app.get('/robots.txt', (c) => {
+  const origin = new URL(c.req.url).origin;
+  return new Response(`User-agent: *\nAllow: /\n\nSitemap: ${origin}/sitemap.xml\n`, {
+    status: 200,
+    headers: {
+      'Content-Type': 'text/plain; charset=UTF-8',
+    },
+  });
+});
 
 export const onRequest = handle(app);
