@@ -4,6 +4,27 @@ const { name } = Astro.props;
 ---
 <a href={`/tags/${encodeURIComponent(name)}`} class="tag-badge" id={`tag-${name.replace(/\s+/g, '-').toLowerCase()}`}># {name}</a>
 <style>
-.tag-badge{display:inline-flex;align-items:center;gap:0.2rem;padding:0.2rem 0.55rem;border-radius:var(--radius-full);font-family:var(--font-mono);font-size:0.7rem;font-weight:500;color:var(--accent-cyan);background:rgba(6,182,212,0.1);border:1px solid rgba(6,182,212,0.2);transition:all var(--transition-fast);text-decoration:none}
-.tag-badge:hover{background:rgba(6,182,212,0.2);border-color:rgba(6,182,212,0.4);color:var(--accent-cyan);transform:translateY(-1px)}
+.tag-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-full);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--accent-electric-purple);
+  background: var(--accent-electric-purple-dim);
+  border: 1px solid rgba(168, 85, 247, 0.2);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-decoration: none;
+}
+
+.tag-badge:hover {
+  background: rgba(168, 85, 247, 0.18);
+  border-color: rgba(168, 85, 247, 0.4);
+  color: var(--accent-electric-purple);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(168, 85, 247, 0.2);
+}
 </style>

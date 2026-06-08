@@ -1,0 +1,299 @@
+---
+/**
+ * Animations — GSAP ScrollTrigger Animation System
+ * Handles all scroll-triggered reveals, parallax, 3D card tilt, 
+ * counter animations, and navbar scroll effects.
+ * Loaded via CDN, respects prefers-reduced-motion.
+ */
+---
+
+<!-- GSAP Core + ScrollTrigger CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Bail on reduced motion
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  // Wait for GSAP to load
+  function waitForGSAP(cb, attempts = 0) {
+    if (window.gsap && window.ScrollTrigger) {
+      cb();
+    } else if (attempts < 50) {
+      setTimeout(() => waitForGSAP(cb, attempts + 1), 100);
+    }
+  }
+
+  waitForGSAP(() => {
+    const gsap = window.gsap;
+    const ScrollTrigger = window.ScrollTrigger;
+    gsap.registerPlugin(ScrollTrigger);
+
+    // ── Hero Title Staggered Reveal ──
+    const heroLines = document.querySelectorAll('.hero__title-line, .hero__title-accent');
+    if (heroLines.length) {
+      gsap.from(heroLines, {
+        y: 80,
+        opacity: 0,
+        clipPath: 'inset(100% 0 0 0)',
+        duration: 1,
+        stagger: 0.2,
+        ease: 'power4.out',
+        delay: 0.3
+      });
+    }
+
+    // ── Hero Status Badge ──
+    const heroStatus = document.querySelector('.hero__status');
+    if (heroStatus) {
+      gsap.from(heroStatus, {
+        x: -40,
+        opacity: 0,
+        duration: 0.8,
+        ease: 'power3.out',
+        delay: 0.1
+      });
+    }
+
+    // ── Hero Description ──
+    const heroDesc = document.querySelector('.hero__description');
+    if (heroDesc) {
+      gsap.from(heroDesc, {
+        y: 30,
+        opacity: 0,
+        duration: 0.8,
+        ease: 'power3.out',
+        delay: 0.7
+      });
+    }
+
+    // ── Hero Stats Counter Animation ──
+    const statValues = document.querySelectorAll('.hero__stat-value');
+    statValues.forEach((el) => {
+      const target = parseInt(el.textContent) || 0;
+      if (target === 0) return;
+      const obj = { val: 0 };
+      gsap.to(obj, {
+        val: target,
+        duration: 2,
+        delay: 0.8,
+        ease: 'power2.out',
+        onUpdate: () => {
+          el.textContent = Math.round(obj.val);
+        }
+      });
+    });
+
+    // ── Hero Terminal Typewriter ──
+    const terminalLines = document.querySelectorAll('.terminal__body p');
+    if (terminalLines.length) {
+      gsap.from(terminalLines, {
+        opacity: 0,
+        x: -20,
+        duration: 0.4,
+        stagger: 0.15,
+        ease: 'power2.out',
+        delay: 0.5
+      });
+    }
+
+    // ── Hero Terminal Float ──
+    const terminal = document.querySelector('.hero__terminal');
+    if (terminal) {
+      gsap.from(terminal, {
+        y: 60,
+        opacity: 0,
+        rotateY: -8,
+        duration: 1.2,
+        ease: 'power3.out',
+        delay: 0.4
+      });
+    }
+
+    // ── Section Headers — Scroll Reveal ──
+    document.querySelectorAll('.section-header').forEach((header) => {
+      gsap.from(header.children, {
+        y: 40,
+        opacity: 0,
+        duration: 0.8,
+        stagger: 0.15,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: header,
+          start: 'top 85%',
+          toggleActions: 'play none none none'
+        }
+      });
+    });
+
+    // ── Post Cards — Staggered Fade + Lift ──
+    document.querySelectorAll('.post-grid').forEach((grid) => {
+      const cards = grid.querySelectorAll('.post-card');
+      gsap.from(cards, {
+        y: 50,
+        opacity: 0,
+        duration: 0.7,
+        stagger: 0.1,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: grid,
+          start: 'top 85%',
+          toggleActions: 'play none none none'
+        }
+      });
+    });
+
+    // ── Glass Card 3D Tilt ──
+    document.querySelectorAll('.glass-card').forEach((card) => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const rotateX = (y - centerY) / centerY * -6;
+        const rotateY = (x - centerX) / centerX * 6;
+
+        gsap.to(card, {
+          rotateX: rotateX,
+          rotateY: rotateY,
+          transformPerspective: 800,
+          duration: 0.4,
+          ease: 'power2.out'
+        });
+      });
+
+      card.addEventListener('mouseleave', () => {
+        gsap.to(card, {
+          rotateX: 0,
+          rotateY: 0,
+          duration: 0.6,
+          ease: 'power3.out'
+        });
+      });
+    });
+
+    // ── Navbar Scroll Effect ──
+    const navbar = document.querySelector('.navbar');
+    if (navbar) {
+      ScrollTrigger.create({
+        start: 'top -80',
+        onUpdate: (self) => {
+          if (self.direction === 1 && self.scroll() > 80) {
+            navbar.classList.add('navbar--scrolled');
+          } else if (self.scroll() <= 80) {
+            navbar.classList.remove('navbar--scrolled');
+          }
+        }
+      });
+    }
+
+    // ── Footer Reveal ──
+    const footer = document.querySelector('.footer');
+    if (footer) {
+      gsap.from(footer.querySelectorAll('.footer__brand, .footer__col, .footer__bottom'), {
+        y: 30,
+        opacity: 0,
+        duration: 0.6,
+        stagger: 0.12,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: footer,
+          start: 'top 90%',
+          toggleActions: 'play none none none'
+        }
+      });
+    }
+
+    // ── Parallax on Hero Background ──
+    const heroBg = document.querySelector('.hero__bg');
+    if (heroBg) {
+      gsap.to(heroBg, {
+        y: 150,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '.hero',
+          start: 'top top',
+          end: 'bottom top',
+          scrub: true
+        }
+      });
+    }
+
+    // ── Magnetic Hover on Buttons/CTAs ──
+    document.querySelectorAll('.hero__status, .type-badge, .navbar__link').forEach((el) => {
+      el.addEventListener('mousemove', (e) => {
+        const rect = el.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        gsap.to(el, {
+          x: x * 0.15,
+          y: y * 0.15,
+          duration: 0.3,
+          ease: 'power2.out'
+        });
+      });
+      el.addEventListener('mouseleave', () => {
+        gsap.to(el, { x: 0, y: 0, duration: 0.5, ease: 'elastic.out(1, 0.5)' });
+      });
+    });
+
+    // ── Threat Radar Section ──
+    const radar = document.querySelector('.threat-radar');
+    if (radar) {
+      gsap.from(radar, {
+        scale: 0.8,
+        opacity: 0,
+        duration: 1,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: radar,
+          start: 'top 80%',
+          toggleActions: 'play none none none'
+        }
+      });
+    }
+
+    // ── Archive Dates ──
+    document.querySelectorAll('.archive-date').forEach((date, i) => {
+      gsap.from(date, {
+        x: -30,
+        opacity: 0,
+        duration: 0.5,
+        delay: i * 0.05,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: date,
+          start: 'top 95%',
+          toggleActions: 'play none none none'
+        }
+      });
+    });
+
+    // ── Post Page Reveal ──
+    const postHeader = document.querySelector('.post-page__header');
+    if (postHeader) {
+      gsap.from(postHeader, {
+        y: 50,
+        opacity: 0,
+        duration: 0.8,
+        ease: 'power3.out',
+        delay: 0.2
+      });
+    }
+
+    const postInfo = document.querySelector('.post-page__info');
+    if (postInfo) {
+      gsap.from(postInfo.querySelectorAll('.info-item'), {
+        y: 30,
+        opacity: 0,
+        duration: 0.6,
+        stagger: 0.1,
+        ease: 'power3.out',
+        delay: 0.5
+      });
+    }
+  });
+});
+</script>

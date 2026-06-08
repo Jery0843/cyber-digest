@@ -15,15 +15,24 @@ if (db) {
 <BaseLayout title="Educational Blog — CyberDigest" description="Educational cybersecurity blog posts explaining threats, vulnerabilities, and best practices.">
   <section class="page-content">
     <div class="container">
-      <div class="section-header animate-in">
+      <div class="section-header">
         <p class="section-header__label">◉ Educational</p>
         <h1 class="section-header__title">Security <span>Blog</span></h1>
-        <p class="page-desc">Educational posts that break down cybersecurity topics. {total} posts total.</p>
+        <p class="page-desc">Educational posts that break down cybersecurity topics. <span class="page-desc__count">{total}</span> posts total.</p>
       </div>
       <PostGrid posts={posts} emptyMessage="No blog posts yet. The daily cron will publish the first batch soon." />
     </div>
   </section>
 </BaseLayout>
 <style>
-.page-desc{color:var(--text-secondary);font-size:var(--text-sm);margin-top:var(--space-sm)}
+.page-desc {
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  margin-top: var(--space-sm);
+}
+.page-desc__count {
+  color: var(--accent-cyan);
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
 </style>

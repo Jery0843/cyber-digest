@@ -1,23 +1,25 @@
-/* Holographic Control Center Dashboard Layout */
+/* Holographic Control Center Dashboard Layout — v2.0 Cyberpunk Neon */
 :root {
-  --bg-primary: #030509;
-  --bg-panel: rgba(5, 8, 16, 0.7);
+  --bg-primary: #06080D;
+  --bg-panel: rgba(8, 12, 24, 0.7);
   --accent-green: #00f0ff;
-  --accent-green-dim: rgba(0, 240, 255, 0.15);
-  --accent-purple: #b000ff;
-  --accent-red: #ff003c;
-  --accent-red-dim: rgba(255, 0, 60, 0.15);
-  --accent-amber: #ffaa00;
-  --accent-amber-dim: rgba(255, 170, 0, 0.15);
-  --accent-blue: #0088ff;
-  --accent-blue-dim: rgba(0, 136, 255, 0.15);
-  --text-primary: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.7);
+  --accent-green-dim: rgba(0, 240, 255, 0.12);
+  --accent-purple: #A855F7;
+  --accent-red: #FF2A6D;
+  --accent-red-dim: rgba(255, 42, 109, 0.12);
+  --accent-amber: #FACC15;
+  --accent-amber-dim: rgba(250, 204, 21, 0.12);
+  --accent-blue: #3B82F6;
+  --accent-blue-dim: rgba(59, 130, 246, 0.12);
+  --accent-neon-green: #05FFA1;
+  --text-primary: #F1F5F9;
+  --text-secondary: rgba(241, 245, 249, 0.7);
   --text-muted: rgba(0, 240, 255, 0.6);
-  --border-subtle: rgba(0, 240, 255, 0.1);
-  --border-accent: rgba(0, 240, 255, 0.3);
-  --font-sans: 'Rajdhani', sans-serif;
-  --font-mono: 'Share Tech Mono', monospace;
+  --border-subtle: rgba(0, 240, 255, 0.08);
+  --border-accent: rgba(0, 240, 255, 0.25);
+  --font-display: 'Oswald', 'Impact', sans-serif;
+  --font-sans: 'Space Grotesk', 'Rajdhani', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Share Tech Mono', monospace;
   --space-xs: 0.25rem;
   --space-sm: 0.5rem;
   --space-md: 1rem;
