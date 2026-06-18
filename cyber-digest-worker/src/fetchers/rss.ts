@@ -375,7 +375,7 @@ function extractFields(itemXml: string, isAtom: boolean) {
 // Utilities
 // ═══════════════════════════════════════════════════════════════════════════
 function cleanHTML(str: string) {
-  return str.replace(/<[^>]*>?/gm, '').substring(0, 500); // Strip HTML and truncate
+  return str.replace(/<[^>]*>?/gm, '').substring(0, 2000); // Strip HTML and truncate — preserve more context for AI analysis
 }
 
 function extractCVE(text: string): string | null {

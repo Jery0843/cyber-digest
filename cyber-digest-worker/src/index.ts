@@ -10,6 +10,27 @@ import { generateContent } from './generation/generator';
 import { validateContent } from './generation/validator';
 import { savePost, logGeneration, getRecentSourceUrls } from './db/queries';
 
+// ═══════════════════════════════════════════════════════════════════════════
+// Cron Slot Detection
+// The worker has two cron triggers:
+//   "0 2 * * *"  → Morning run  (02:00 UTC / 07:30 IST)
+//   "0 14 * * *" → Evening run  (14:00 UTC / 19:30 IST)
+//
+// Both runs independently produce 3 posts (article + news + blog).
+// The morning run uses events ranked by the standard pipeline.
+// The evening run re-fetches to catch newly published articles and
+// skips only sources that were already used in a post TODAY.
+// ═══════════════════════════════════════════════════════════════════════════
+
+type CronSlot = 'morning' | 'evening' | 'manual';
+
+function detectCronSlot(event: ScheduledEvent | { cron: string }): CronSlot {
+  const cron = event.cron;
+  if (cron === '0 2 * * *') return 'morning';
+  if (cron === '0 14 * * *') return 'evening';
+  return 'manual'; // Manual trigger via /__scheduled
+}
+
 export default {
   // Provide a fetch handler for testing the worker manually without waiting for cron
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
@@ -18,20 +39,24 @@ export default {
       await this.scheduled({ cron: 'manual', type: 'manual', scheduledTime: Date.now() } as unknown as ScheduledEvent, env, ctx);
       return new Response('Scheduled task executed manually.', { status: 200 });
     }
-    return new Response('CyberDigest Worker is running. Daily cron scheduled.', { status: 200 });
+    return new Response('CyberDigest Worker is running. Dual cron scheduled (02:00 & 14:00 UTC).', { status: 200 });
   },
 
   async scheduled(event: ScheduledEvent, env: Env, ctx: ExecutionContext) {
-    console.log(`Cron triggered at ${new Date(event.scheduledTime).toISOString()}`);
+    const slot = detectCronSlot(event);
+    console.log(`══════════════════════════════════════════════════════════════`);
+    console.log(`Cron triggered: slot=${slot} | time=${new Date(event.scheduledTime).toISOString()}`);
+    console.log(`══════════════════════════════════════════════════════════════`);
+
     let postsCreated = 0;
     
     try {
-      // 1. Fetch from all sources in parallel
+      // ─── 1. Fetch from all sources in parallel ─────────────────────────
       console.log('Fetching from data sources...');
       const [nvdEvents, cisaEvents, ghEvents, rssEvents] = await Promise.all([
-        fetchNVD(), // Optional: pass API key if configured via env vars
+        fetchNVD(),
         fetchCISA(),
-        fetchGitHubAdvisories(), // Optional: pass PAT if configured
+        fetchGitHubAdvisories(),
         fetchRSSFeeds()
       ]);
 
@@ -40,22 +65,27 @@ export default {
       let allEvents = [...nvdEvents, ...cisaEvents, ...ghEvents, ...rssEvents];
       console.log(`[Pipeline] Total raw events from all sources: ${allEvents.length}`);
 
-      // Filter out events that we have already published recently
+      // ─── 2. Filter out previously published sources ─────────────────────
+      // Use a shorter lookback window so the evening run isn't starved
+      // by the morning run consuming all sources.
       const recentUrls = await getRecentSourceUrls(env);
+      const beforeDedup = allEvents.length;
       allEvents = allEvents.filter(e => !e.source_url || !recentUrls.has(e.source_url));
-      console.log(`After DB deduplication: ${allEvents.length} events remain.`);
+      console.log(`[DB Dedup] Removed ${beforeDedup - allEvents.length} already-published sources → ${allEvents.length} remain`);
 
       if (allEvents.length === 0) {
-        console.log('No events collected today. Skipping generation.');
-        await logGeneration(env, 'skipped', 0, 'No events found');
+        console.log('No events collected. Skipping generation.');
+        await logGeneration(env, 'skipped', 0, `No events found (slot: ${slot})`);
         return;
       }
 
-      // 2. Normalization & Deduplication & Ranking
+      // ─── 3. Normalization & Deduplication ───────────────────────────────
       allEvents = await normalizeEvents(allEvents);
       allEvents = deduplicateEvents(allEvents);
+      console.log(`[Pipeline] After normalize + dedup: ${allEvents.length} events`);
 
-      // 2.5 Strict freshness gate — prefer same-day (24h), fallback to 48h
+      // ─── 4. Freshness Gate ──────────────────────────────────────────────
+      // Prefer same-day (24h), fallback to 48h
       const now = new Date();
       const oneDayAgo = new Date(now.getTime() - (24 * 60 * 60 * 1000));
       const twoDaysAgo = new Date(now.getTime() - (48 * 60 * 60 * 1000));
@@ -67,26 +97,27 @@ export default {
 
       if (freshEvents.length > 0) {
         allEvents = freshEvents;
-        console.log(`Freshness gate: ${freshEvents.length} events from last 24h — using these.`);
+        console.log(`[Freshness] ${freshEvents.length} events from last 24h — using these.`);
       } else {
-        // Fallback: use up to 48h events but log a warning
         const fallbackEvents = allEvents.filter(e => {
           const d = new Date(e.event_date);
           return !isNaN(d.getTime()) && d >= twoDaysAgo;
         });
         allEvents = fallbackEvents;
-        console.warn(`Freshness gate: 0 events in last 24h. Falling back to ${fallbackEvents.length} events from last 48h.`);
+        console.warn(`[Freshness] 0 events in last 24h. Falling back to ${fallbackEvents.length} events from last 48h.`);
       }
 
       if (allEvents.length === 0) {
         console.log('No fresh events remaining after freshness gate. Skipping generation.');
-        await logGeneration(env, 'skipped', 0, 'No fresh events (within 24-48h window)');
+        await logGeneration(env, 'skipped', 0, `No fresh events within 24-48h window (slot: ${slot})`);
         return;
       }
 
+      // ─── 5. Rank events ────────────────────────────────────────────────
       const rankedEvents = rankEvents(allEvents);
+      console.log(`[Ranking] Top event: "${rankedEvents[0]?.title}" (score: ${(rankedEvents[0] as any)?.rankScore})`);
 
-      // 3 & 4. Topic Selection & Generation with Fallback
+      // ─── 6. Generate 3 posts (article, news, blog) ────────────────────
       let remainingEvents = [...rankedEvents];
       const targetPostTypes = ['article', 'news', 'blog'] as const;
 
@@ -96,13 +127,15 @@ export default {
         while (!successForType && remainingEvents.length > 0) {
            // Take the top event and its related CVE events
            const candidate = remainingEvents[0];
-           const related = candidate.cve_id ? remainingEvents.filter(e => e.id !== candidate.id && e.cve_id === candidate.cve_id) : [];
+           const related = candidate.cve_id 
+             ? remainingEvents.filter(e => e.id !== candidate.id && e.cve_id === candidate.cve_id) 
+             : [];
            const group = [candidate, ...related];
            
            // Remove these from remainingEvents pool
            remainingEvents = remainingEvents.filter(e => !group.find(g => g.id === e.id));
            
-           console.log(`Attempting to generate ${pt} post from ${group.length} events (Candidate: ${candidate.title})...`);
+           console.log(`[Gen] Attempting ${pt} from ${group.length} events: "${candidate.title}"`);
            const generated = await generateContent(env, group, pt);
            
            if (generated) {
@@ -112,27 +145,30 @@ export default {
                if (success) {
                  postsCreated++;
                  successForType = true;
-                 console.log(`Successfully published ${pt} post.`);
+                 console.log(`[Gen] ✓ Published ${pt} post: "${generated.title}"`);
                } else {
-                 console.error(`Failed to save ${pt} post to database.`);
+                 console.error(`[Gen] ✗ Failed to save ${pt} post to database.`);
                }
              } else {
-               console.warn(`Validation failed for ${pt}: ${validation.reason}. Trying next topic...`);
+               console.warn(`[Gen] ✗ Validation failed for ${pt}: ${validation.reason}. Trying next topic...`);
              }
            } else {
-             console.warn(`AI failed to generate content for ${pt}. Trying next topic...`);
+             console.warn(`[Gen] ✗ AI failed to generate content for ${pt}. Trying next topic...`);
            }
         }
         
         if (!successForType) {
-           console.warn(`Exhausted all events without successfully generating a ${pt} post.`);
+           console.warn(`[Gen] ⚠ Exhausted all events without successfully generating a ${pt} post.`);
         }
       }
 
-      // 5. Finalize log
+      // ─── 7. Final log ──────────────────────────────────────────────────
       const status = postsCreated === 3 ? 'success' : (postsCreated > 0 ? 'partial' : 'failure');
       const errorMsg = postsCreated === 0 ? 'All generations failed or were rejected by validator' : null;
       await logGeneration(env, status, postsCreated, errorMsg);
+      console.log(`══════════════════════════════════════════════════════════════`);
+      console.log(`Run complete: slot=${slot} | posts=${postsCreated}/3 | status=${status}`);
+      console.log(`══════════════════════════════════════════════════════════════`);
 
     } catch (err: any) {
       console.error('Fatal error during scheduled execution:', err);

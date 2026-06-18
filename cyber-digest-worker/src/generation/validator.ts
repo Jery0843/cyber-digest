@@ -14,14 +14,14 @@ export function validateContent(content: GenContentLocal, sourceEvents: CyberEve
 
   // 2. Minimum length checks based on type
   const wordCount = content.content.split(/\s+/).length;
-  if (type === 'news' && wordCount < 80) {
-    return { isValid: false, reason: `News content too short (${wordCount} words, min 80)` };
+  if (type === 'news' && wordCount < 250) {
+    return { isValid: false, reason: `News content too short (${wordCount} words, min 250)` };
   }
-  if (type === 'blog' && wordCount < 200) {
-    return { isValid: false, reason: `Blog content too short (${wordCount} words, min 200)` };
+  if (type === 'blog' && wordCount < 500) {
+    return { isValid: false, reason: `Blog content too short (${wordCount} words, min 500)` };
   }
-  if (type === 'article' && wordCount < 350) {
-    return { isValid: false, reason: `Article content too short (${wordCount} words, min 350)` };
+  if (type === 'article' && wordCount < 800) {
+    return { isValid: false, reason: `Article content too short (${wordCount} words, min 800)` };
   }
 
   const contentLower = content.content.toLowerCase();

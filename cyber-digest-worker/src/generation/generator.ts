@@ -21,15 +21,15 @@ export async function generateContent(env: Env, events: CyberEvent[], type: 'new
   switch (type) {
     case 'news':
       systemPrompt = NEWS_PROMPT;
-      maxTokens = 800;
+      maxTokens = 2000;
       break;
     case 'blog':
       systemPrompt = BLOG_PROMPT;
-      maxTokens = 1500;
+      maxTokens = 4000;
       break;
     case 'article':
       systemPrompt = ARTICLE_PROMPT;
-      maxTokens = 2500;
+      maxTokens = 6000;
       break;
   }
 
@@ -39,7 +39,7 @@ export async function generateContent(env: Env, events: CyberEvent[], type: 'new
 
   // Retry logic for malformed JSON
   let attempts = 0;
-  const maxAttempts = 2;
+  const maxAttempts = 3;
 
   while (attempts < maxAttempts) {
     attempts++;

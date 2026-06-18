@@ -64,10 +64,13 @@ export async function logGeneration(env: Env, status: string, postsCreated: numb
 
 export async function getRecentSourceUrls(env: Env): Promise<Set<string>> {
   try {
+    // Only look back 1 day to avoid starving the evening cron run.
+    // The morning run's sources get filtered, but newly published articles
+    // between 02:00-14:00 UTC will be available for the evening run.
     const results = await env.DB.prepare(`
       SELECT ps.source_url FROM post_sources ps
       JOIN posts p ON ps.post_id = p.id
-      WHERE p.published_at > datetime('now', '-3 days')
+      WHERE p.published_at > datetime('now', '-1 day')
     `).all<{ source_url: string }>();
     
     return new Set(results.results.map(r => r.source_url));
