@@ -1,33 +1,22 @@
 ---
 /**
- * Animations — GSAP ScrollTrigger Animation System
+ * Animations — GSAP ScrollTrigger Animation System (Performance-Optimized)
  * Handles all scroll-triggered reveals, parallax, 3D card tilt, 
  * counter animations, and navbar scroll effects.
- * Loaded via CDN, respects prefers-reduced-motion.
+ * Loaded async via CDN with onload chain — no polling.
+ * Respects prefers-reduced-motion.
  */
 ---
 
-<!-- GSAP Core + ScrollTrigger CDN -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
-
 <script>
-document.addEventListener('DOMContentLoaded', () => {
+(function() {
   // Bail on reduced motion
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-  // Wait for GSAP to load
-  function waitForGSAP(cb, attempts = 0) {
-    if (window.gsap && window.ScrollTrigger) {
-      cb();
-    } else if (attempts < 50) {
-      setTimeout(() => waitForGSAP(cb, attempts + 1), 100);
-    }
-  }
-
-  waitForGSAP(() => {
+  function initAnimations() {
     const gsap = window.gsap;
     const ScrollTrigger = window.ScrollTrigger;
+    if (!gsap || !ScrollTrigger) return;
     gsap.registerPlugin(ScrollTrigger);
 
     // ── Hero Title Staggered Reveal ──
@@ -162,7 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
           duration: 0.4,
           ease: 'power2.out'
         });
-      });
+      }, { passive: true });
 
       card.addEventListener('mouseleave', () => {
         gsap.to(card, {
@@ -233,7 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
           duration: 0.3,
           ease: 'power2.out'
         });
-      });
+      }, { passive: true });
       el.addEventListener('mouseleave', () => {
         gsap.to(el, { x: 0, y: 0, duration: 0.5, ease: 'elastic.out(1, 0.5)' });
       });
@@ -294,6 +283,39 @@ document.addEventListener('DOMContentLoaded', () => {
         delay: 0.5
       });
     }
+  }
+
+  // Load GSAP async with onload chain — no polling
+  function loadGSAP() {
+    const gsapScript = document.createElement('script');
+    gsapScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js';
+    gsapScript.async = true;
+    gsapScript.onload = () => {
+      const stScript = document.createElement('script');
+      stScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js';
+      stScript.async = true;
+      stScript.onload = () => {
+        initAnimations();
+      };
+      document.head.appendChild(stScript);
+    };
+    document.head.appendChild(gsapScript);
+  }
+
+  // Start loading when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadGSAP);
+  } else {
+    loadGSAP();
+  }
+
+  // Re-init on View Transition navigation
+  document.addEventListener('astro:page-load', () => {
+    if (window.gsap && window.ScrollTrigger) {
+      // Kill old ScrollTriggers to avoid duplicates
+      window.ScrollTrigger.getAll().forEach(t => t.kill());
+      initAnimations();
+    }
   });
-});
+})();
 </script>
