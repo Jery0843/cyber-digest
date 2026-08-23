@@ -264,17 +264,24 @@ app.get('/education', (c) => {
                 </div>
                 <span style="color: var(--accent-purple);">View Module &rarr;</span>
               </a>
-              <div class="glass-card archive-row animate-in" style="opacity: 0.5; display: flex; align-items: center; justify-content: space-between; cursor: not-allowed; animation-delay: 0.1s">
+              <a href="/education/module-2" class="glass-card archive-row animate-in" style="display: flex; align-items: center; justify-content: space-between; text-decoration: none; animation-delay: 0.1s">
                 <div>
-                  <strong>Module 02</strong>
-                  <h3 style="margin: 0.5rem 0 0 0; color: #999;">Footprinting and Reconnaissance</h3>
+                  <strong style="color: var(--accent-blue);">Module 02</strong>
+                  <h3 style="margin: 0.5rem 0 0 0; color: #fff;">Footprinting and Reconnaissance</h3>
                 </div>
-                <span style="color: #666;">Coming Soon</span>
-              </div>
+                <span style="color: var(--accent-purple);">View Module &rarr;</span>
+              </a>
               <div class="glass-card archive-row animate-in" style="opacity: 0.5; display: flex; align-items: center; justify-content: space-between; cursor: not-allowed; animation-delay: 0.2s">
                 <div>
                   <strong>Module 03</strong>
                   <h3 style="margin: 0.5rem 0 0 0; color: #999;">Scanning Networks</h3>
+                </div>
+                <span style="color: #666;">Coming Soon</span>
+              </div>
+              <div class="glass-card archive-row animate-in" style="opacity: 0.5; display: flex; align-items: center; justify-content: space-between; cursor: not-allowed; animation-delay: 0.3s">
+                <div>
+                  <strong>Module 04</strong>
+                  <h3 style="margin: 0.5rem 0 0 0; color: #999;">Enumeration</h3>
                 </div>
                 <span style="color: #666;">Coming Soon</span>
               </div>
@@ -1007,7 +1014,275 @@ app.get('/education/module-1', (c) => {
                </a>
                <div style="text-align: right;">
                  <span style="color: #888; font-size: 0.95rem; display: block; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 1px;">Next Module</span>
-                 <span style="color: #fff; cursor: not-allowed; opacity: 0.5; font-size: 1.1rem; font-weight: bold;">Footprinting & Reconnaissance &rarr;</span>
+                 <a href="/education/module-2" style="color: var(--accent-blue); font-size: 1.1rem; font-weight: bold; text-decoration: none;">Footprinting &amp; Reconnaissance &rarr;</a>
+               </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    `
+  }));
+});
+
+app.get('/education/module-2', (c) => {
+  return c.html(layout({
+    title: 'Module 2: Footprinting and Reconnaissance - Hack Lab',
+    description: 'A complete advanced guide to footprinting concepts, OSINT, search engines, DNS, WHOIS, network and email reconnaissance, automation, AI-assisted analysis, and countermeasures.',
+    path: '/education',
+    body: `
+      <div class="dashboard-content-area">
+        <div class="container" style="max-width: 1100px; margin: 0 auto;">
+          <article class="post-page animate-in">
+            <header class="post-page__header" style="text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 3rem; margin-bottom: 3rem;">
+              <div class="post-page__meta" style="justify-content: center;"><span class="type-badge type-badge--article">Module 02</span></div>
+              <h1 class="post-page__title" style="font-size: 3.5rem; margin-bottom: 1rem; background: linear-gradient(90deg, #fff, #888); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Footprinting and Reconnaissance</h1>
+              <p class="post-page__summary" style="font-size: 1.3rem; color: #aaa; max-width: 850px; margin: 0 auto;">A complete, understandable guide to collecting, organizing, validating, and reducing publicly visible attack-surface information during authorized security assessments.</p>
+            </header>
+
+            <div class="post-content animate-in" style="font-size: 1.08rem; line-height: 1.8; color: #ccc;">
+
+              <div class="glass-card" style="padding: 2rem; margin-bottom: 3rem; border-left: 4px solid var(--accent-red);">
+                <h2 style="margin-top: 0; color: #fff; font-size: 1.7rem;">Ethical Scope</h2>
+                <p>Footprinting is dual-use. The same techniques help defenders understand exposure and help attackers choose targets. In this lab, every technique must be used only on assets you own, assets in an approved training range, or targets covered by written authorization. The objective is to build a security profile, report risk clearly, and reduce exposure.</p>
+              </div>
+
+              <div class="glass-card" style="padding: 3rem; margin-bottom: 4rem; border-left: 4px solid var(--accent-blue);">
+                <h2 style="margin-top: 0; color: #fff; font-size: 2rem;">Learning Objectives</h2>
+                <ol style="font-size: 0.98rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0.5rem 2rem; padding-left: 1.25rem;">
+                  <li>Explain footprinting concepts.</li>
+                  <li>Demonstrate footprinting through search engines.</li>
+                  <li>Use internet research services for OSINT.</li>
+                  <li>Understand social networking reconnaissance.</li>
+                  <li>Use Whois footprinting techniques.</li>
+                  <li>Use DNS footprinting techniques.</li>
+                  <li>Understand network and email footprinting.</li>
+                  <li>Recognize social engineering reconnaissance.</li>
+                  <li>Automate footprinting with tools and AI-assisted analysis.</li>
+                  <li>Apply practical countermeasures.</li>
+                </ol>
+              </div>
+
+              <h2 style="color: #fff; font-size: 2rem;">1. Footprinting Concepts</h2>
+              <p>Footprinting, also called reconnaissance, is the first structured phase of an ethical hacking engagement. The assessor gathers as much relevant information as possible about an organization, network, application, people, cloud footprint, and public infrastructure before deeper testing begins. When done methodically, footprinting produces a <strong>blueprint</strong>: a working map of the target's visible security profile.</p>
+              <p>The blueprint does not prove that a system is vulnerable by itself. It shows where to look, which technologies are exposed, which business units exist, what domains and subdomains are active, where email flows, which providers are used, and which controls may be missing.</p>
+
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin: 2rem 0;">
+                <div style="background: rgba(0,240,255,0.06); border: 1px solid rgba(0,240,255,0.18); padding: 1.5rem; border-radius: 8px;">
+                  <h3 style="margin-top: 0; color: var(--accent-blue);">Passive Footprinting</h3>
+                  <p style="font-size: 0.95rem;">Passive footprinting gathers stored or indexed information without directly touching the target's systems. It relies on search engines, public records, archived pages, breach-notification services, job posts, social networks, code repositories, certificate transparency logs, and other open sources.</p>
+                  <p style="font-size: 0.95rem; margin-bottom: 0;">It is quieter because the target usually does not see direct traffic from the assessor, but it may be incomplete or outdated.</p>
+                </div>
+                <div style="background: rgba(176,0,255,0.06); border: 1px solid rgba(176,0,255,0.18); padding: 1.5rem; border-radius: 8px;">
+                  <h3 style="margin-top: 0; color: var(--accent-purple);">Active Footprinting</h3>
+                  <p style="font-size: 0.95rem;">Active footprinting interacts with target-controlled systems. DNS queries, traceroute, controlled port discovery, banner collection, and service validation can provide fresher and more accurate data.</p>
+                  <p style="font-size: 0.95rem; margin-bottom: 0;">Because active testing creates traffic and logs, it must be scheduled, scoped, and approved.</p>
+                </div>
+              </div>
+
+              <h3 style="color: #fff;">Information Collected During Footprinting</h3>
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; font-size: 0.95rem;">
+                <div style="background: rgba(255,255,255,0.03); padding: 1.25rem; border-radius: 8px;">
+                  <strong style="color: var(--accent-blue); display: block; margin-bottom: 0.5rem;">Organization Information</strong>
+                  Employee names, roles, emails, phone numbers, locations, departments, partners, public links, news, press releases, legal records, patents, trademarks, and web technologies.
+                </div>
+                <div style="background: rgba(255,255,255,0.03); padding: 1.25rem; border-radius: 8px;">
+                  <strong style="color: var(--accent-purple); display: block; margin-bottom: 0.5rem;">Network Information</strong>
+                  Domains, subdomains, netblocks, IP addresses, hosting providers, DNS records, public routers, reachable services, firewall clues, and Whois records.
+                </div>
+                <div style="background: rgba(255,255,255,0.03); padding: 1.25rem; border-radius: 8px;">
+                  <strong style="color: var(--accent-green); display: block; margin-bottom: 0.5rem;">System Information</strong>
+                  Web server platforms, operating systems when exposed, application frameworks, public email patterns, usernames in metadata, cloud services, and exposed login surfaces.
+                </div>
+              </div>
+
+              <h3 style="color: #fff; margin-top: 2.5rem;">Footprinting Threats</h3>
+              <ul style="font-size: 0.95rem;">
+                <li><strong>Social engineering:</strong> Attackers use collected names, roles, vendors, and internal vocabulary to sound credible when contacting employees.</li>
+                <li><strong>System and network attacks:</strong> Version numbers, exposed services, cloud buckets, and login portals help an attacker prioritize later exploitation attempts.</li>
+                <li><strong>Information leakage:</strong> Documents, source code, backups, metadata, and public tickets can reveal sensitive internal details.</li>
+                <li><strong>Corporate espionage:</strong> Competitors or hostile actors can use public information to infer strategy, pricing, partnerships, technologies, and product direction.</li>
+              </ul>
+              <p>A clean methodology keeps passive work, active validation, people OSINT, DNS, network mapping, reporting, and countermeasures separate so findings stay traceable.</p>
+
+              <h2 style="color: #fff; font-size: 2rem; margin-top: 4rem;">2. Search Engine Footprinting</h2>
+              <p>Search engines are often the richest passive reconnaissance source. Crawlers index web pages, PDFs, spreadsheets, images, cached content, exposed directories, old pages, login portals, and error messages. A defender uses the same visibility to discover what the public internet can learn about the organization.</p>
+              <p>Useful search sources include Google, Bing, Yahoo, Ask, AOL, Baidu, Yandex, WolframAlpha, DuckDuckGo, Startpage, MetaGer, and eTools.ch. Results can reveal technology platforms, employee details, support portals, intranet naming patterns, file leaks, and contact information.</p>
+
+              <h3 style="color: #fff;">Advanced Search Operators</h3>
+              <table style="width: 100%; border-collapse: collapse; margin: 1.5rem 0; background: rgba(0,0,0,0.2); font-size: 0.92rem;">
+                <tr style="background: rgba(255,255,255,0.05); text-align: left;"><th style="padding: 0.9rem; border: 1px solid rgba(255,255,255,0.1);">Operator</th><th style="padding: 0.9rem; border: 1px solid rgba(255,255,255,0.1);">Purpose</th><th style="padding: 0.9rem; border: 1px solid rgba(255,255,255,0.1);">Example</th></tr>
+                <tr><td style="padding: 0.9rem; border: 1px solid rgba(255,255,255,0.1);"><code>site:</code></td><td style="padding: 0.9rem; border: 1px solid rgba(255,255,255,0.1);">Restrict results to a domain.</td><td style="padding: 0.9rem; border: 1px solid rgba(255,255,255,0.1);"><code>site:example.com security</code></td></tr>
+                <tr><td style="padding: 0.9rem; border: 1px solid rgba(255,255,255,0.1);"><code>inurl:</code> / <code>allinurl:</code></td><td style="padding: 0.9rem; border: 1px solid rgba(255,255,255,0.1);">Find words in URLs.</td><td style="padding: 0.9rem; border: 1px solid rgba(255,255,255,0.1);"><code>inurl:login site:example.com</code></td></tr>
+                <tr><td style="padding: 0.9rem; border: 1px solid rgba(255,255,255,0.1);"><code>intitle:</code> / <code>allintitle:</code></td><td style="padding: 0.9rem; border: 1px solid rgba(255,255,255,0.1);">Find words in page titles.</td><td style="padding: 0.9rem; border: 1px solid rgba(255,255,255,0.1);"><code>intitle:"index of" site:example.com</code></td></tr>
+                <tr><td style="padding: 0.9rem; border: 1px solid rgba(255,255,255,0.1);"><code>intext:</code></td><td style="padding: 0.9rem; border: 1px solid rgba(255,255,255,0.1);">Find exact body text.</td><td style="padding: 0.9rem; border: 1px solid rgba(255,255,255,0.1);"><code>intext:"vpn configuration"</code></td></tr>
+                <tr><td style="padding: 0.9rem; border: 1px solid rgba(255,255,255,0.1);"><code>filetype:</code></td><td style="padding: 0.9rem; border: 1px solid rgba(255,255,255,0.1);">Find file extensions.</td><td style="padding: 0.9rem; border: 1px solid rgba(255,255,255,0.1);"><code>site:example.com filetype:pdf</code></td></tr>
+                <tr><td style="padding: 0.9rem; border: 1px solid rgba(255,255,255,0.1);"><code>cache:</code>, <code>related:</code>, <code>info:</code></td><td style="padding: 0.9rem; border: 1px solid rgba(255,255,255,0.1);">Inspect cached pages, related sites, and search metadata.</td><td style="padding: 0.9rem; border: 1px solid rgba(255,255,255,0.1);"><code>related:example.com</code></td></tr>
+                <tr><td style="padding: 0.9rem; border: 1px solid rgba(255,255,255,0.1);"><code>before:</code> / <code>after:</code></td><td style="padding: 0.9rem; border: 1px solid rgba(255,255,255,0.1);">Filter by publication date.</td><td style="padding: 0.9rem; border: 1px solid rgba(255,255,255,0.1);"><code>site:example.com after:2025-01-01</code></td></tr>
+              </table>
+
+              <p>Google hacking means combining operators into precise queries. It can uncover error messages, backup files, password-containing files, sensitive directories, network logs, exposed source code, login portals, IoT panels, VPN portals, and vulnerable server fingerprints. For example, a defender might search for public intranet references using <code>intitle:intranet inurl:intranet intext:"human resources"</code> against approved domains.</p>
+
+              <div class="glass-card" style="padding: 2rem; margin: 2rem 0; border-left: 4px solid var(--accent-purple);">
+                <h3 style="margin-top: 0; color: #fff;">Google Hacking Database</h3>
+                <p>The Google Hacking Database, hosted by Exploit-DB, catalogs search patterns by category: footholds, files containing usernames, sensitive directories, web server detection, vulnerable files, vulnerable servers, error messages, files containing juicy information, files containing passwords, shopping information, network or vulnerability data, login portals, online devices, advisories, and known vulnerabilities.</p>
+                <p style="margin-bottom: 0;">SearchSploit provides command-line access to Exploit-DB content for local or air-gapped research, but findings still require authorization and verification before any active testing.</p>
+              </div>
+
+              <h3 style="color: #fff;">VPN, IoT, Image, Video, FTP, and Meta Search</h3>
+              <p>Search engines can identify remote access surfaces such as SSL VPN portals, VPN configuration files, OpenVPN key patterns, and vendor-branded login pages. These are sensitive discoveries: in a defensive assessment, record the URL, exposure type, evidence, and business owner, then recommend access control and search deindexing where appropriate.</p>
+              <p>Shodan, Censys, ZoomEye, BinaryEdge, and Fofa index internet-connected devices and services. They are useful for finding exposed VoIP systems, VPN endpoints, IoT devices, SCADA indicators, CCTV panels, open ports, banners, manufacturer names, and geographic hints. Reverse image search, Google Advanced Image Search, TinEye, Bing Images, Pinterest image search, YouTube metadata tools, YouTube DataViewer, MW Metadata, EzGif, and VideoReverser.com can help validate images, facilities, timeframes, thumbnails, and reused profile pictures.</p>
+              <p>FTP search engines and queries such as <code>intitle:"index of" inurl:ftp</code> can reveal indexed file repositories. Meta search engines aggregate results from multiple providers and may reduce search bias or improve privacy.</p>
+
+              <h2 style="color: #fff; font-size: 2rem; margin-top: 4rem;">3. Internet Research Services</h2>
+              <p>Internet research services enrich raw search results with domain, infrastructure, historical, people, and breach context. The goal is to discover assets and relationships that normal website browsing misses.</p>
+              <h3 style="color: #fff;">TLDs and Subdomains</h3>
+              <p>Top-level domains and subdomains reveal business units, regions, environments, vendors, acquisitions, testing systems, and forgotten infrastructure. A subdomain like <code>dev</code>, <code>stage</code>, <code>vpn</code>, <code>mail</code>, <code>jira</code>, or <code>api</code> tells the assessor what kind of system may exist before touching it.</p>
+              <ul style="font-size: 0.95rem;">
+                <li>Search engines can identify indexed subdomains with queries such as <code>site:example.com -inurl:www</code>.</li>
+                <li>Netcraft provides hosting and technology intelligence.</li>
+                <li>DNSdumpster maps DNS relationships and related hosts.</li>
+                <li>Pentest-Tools Find Subdomains discovers subdomains, IP addresses, HTTP services, operating-system hints, and technologies.</li>
+                <li>Sublist3r queries sources such as Baidu, Yahoo, Google, Bing, Ask, Netcraft, DNSdumpster, VirusTotal, and ThreatCrowd.</li>
+              </ul>
+
+              <h3 style="color: #fff;">Archive.org and Historical Data</h3>
+              <p>The Internet Archive's Wayback Machine stores old versions of web pages, media, documents, and software. Historical pages may contain deprecated endpoints, old naming conventions, former vendors, removed documents, or design details. Photon can crawl a site and include Wayback data to extract URLs and archived paths during an authorized assessment.</p>
+
+              <h3 style="color: #fff;">People Search, Job Sites, and Breach Awareness</h3>
+              <p>People search services and job sites can reveal location, email formats, roles, hiring patterns, technology stacks, and vendor names. LinkedIn, Indeed, Glassdoor, Dice, Spokeo, Intelius, Pipl, Whitepages, BeenVerified, Hunter.io, Clearbit, DeHashed, Have I Been Pwned, Intelligence X, Sherlock, Social Analyzer, and Osintgram are commonly discussed in OSINT workflows.</p>
+              <p>Job descriptions are especially useful for defenders because they often disclose real technologies: firewall brands, SIEM platforms, cloud providers, programming languages, EDR products, identity providers, and internal team structure. In a report, convert these observations into exposure risk and hiring-posting guidance rather than treating them as vulnerabilities by themselves.</p>
+
+              <h2 style="color: #fff; font-size: 2rem; margin-top: 4rem;">4. Social Networking Footprinting</h2>
+              <p>Social networks can expose personal information, work details, locations, relationships, photos, metadata, job history, skills, public repositories, and technical conversations. Major OSINT sources include LinkedIn, Facebook, X/Twitter, Instagram, GitHub, and Reddit.</p>
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; font-size: 0.95rem;">
+                <div style="background: rgba(255,255,255,0.03); padding: 1.25rem; border-radius: 8px;"><strong style="color: var(--accent-blue);">LinkedIn:</strong> Roles, reporting lines, departments, tools, certifications, hiring needs, and colleagues.</div>
+                <div style="background: rgba(255,255,255,0.03); padding: 1.25rem; border-radius: 8px;"><strong style="color: var(--accent-purple);">Facebook and Instagram:</strong> Events, check-ins, photos, location tags, badges, facilities, and personal context.</div>
+                <div style="background: rgba(255,255,255,0.03); padding: 1.25rem; border-radius: 8px;"><strong style="color: var(--accent-green);">X/Twitter and Reddit:</strong> Real-time discussions, outages, complaints, conference activity, and technical hints.</div>
+                <div style="background: rgba(255,255,255,0.03); padding: 1.25rem; border-radius: 8px;"><strong style="color: var(--accent-red);">GitHub:</strong> Public code, usernames, email addresses in commits, internal package names, configuration examples, and accidental credential exposure.</div>
+              </div>
+              <p>Tools such as Sherlock, Social Analyzer, Osintgram, Twint, theHarvester, and Maltego CE help map usernames, profiles, emails, subdomains, and relationships. Defenders should use this to understand what an attacker can infer, then recommend social-media guidance, repository secret scanning, and privacy hardening.</p>
+
+              <h2 style="color: #fff; font-size: 2rem; margin-top: 4rem;">5. Whois Footprinting</h2>
+              <p>Whois records identify domain registration data: owner or privacy service, registrar, creation and expiration dates, authoritative name servers, administrative contacts, and technical contacts. Even when privacy protection hides personal details, registrar choices, dates, nameservers, and historical records can connect assets.</p>
+              <p>Common services include the <code>whois</code> command, Whoxy, ViewDNS.info, DomainTools, WHOISXML API, IPinfo.io, and SecurityTrails. Historical Whois is useful because old records may predate privacy protection or infrastructure migrations.</p>
+              <p>IP geolocation tools such as IPinfo.io, MaxMind GeoIP, IPGeolocation.io, and IP-API.com estimate country, region, city, ISP, organization, and coordinates. Treat geolocation as approximate unless confirmed by stronger evidence.</p>
+
+              <h2 style="color: #fff; font-size: 2rem; margin-top: 4rem;">6. DNS Footprinting</h2>
+              <p>DNS footprinting extracts records that describe how a domain resolves and where services are hosted. DNS is partly public by design, so defenders should assume attackers can see exposed records.</p>
+              <table style="width: 100%; border-collapse: collapse; margin: 1.5rem 0; background: rgba(0,0,0,0.2); font-size: 0.92rem;">
+                <tr style="background: rgba(255,255,255,0.05); text-align: left;"><th style="padding: 0.9rem; border: 1px solid rgba(255,255,255,0.1);">Record</th><th style="padding: 0.9rem; border: 1px solid rgba(255,255,255,0.1);">Meaning</th><th style="padding: 0.9rem; border: 1px solid rgba(255,255,255,0.1);">Recon Value</th></tr>
+                <tr><td style="padding: 0.9rem; border: 1px solid rgba(255,255,255,0.1);">A / AAAA</td><td style="padding: 0.9rem; border: 1px solid rgba(255,255,255,0.1);">IPv4 / IPv6 addresses.</td><td style="padding: 0.9rem; border: 1px solid rgba(255,255,255,0.1);">Find hosted systems and providers.</td></tr>
+                <tr><td style="padding: 0.9rem; border: 1px solid rgba(255,255,255,0.1);">MX</td><td style="padding: 0.9rem; border: 1px solid rgba(255,255,255,0.1);">Mail exchangers.</td><td style="padding: 0.9rem; border: 1px solid rgba(255,255,255,0.1);">Identify email providers and security gateways.</td></tr>
+                <tr><td style="padding: 0.9rem; border: 1px solid rgba(255,255,255,0.1);">NS</td><td style="padding: 0.9rem; border: 1px solid rgba(255,255,255,0.1);">Authoritative name servers.</td><td style="padding: 0.9rem; border: 1px solid rgba(255,255,255,0.1);">Show DNS hosting and delegation.</td></tr>
+                <tr><td style="padding: 0.9rem; border: 1px solid rgba(255,255,255,0.1);">TXT</td><td style="padding: 0.9rem; border: 1px solid rgba(255,255,255,0.1);">Text records such as SPF, DKIM, DMARC, and verification tokens.</td><td style="padding: 0.9rem; border: 1px solid rgba(255,255,255,0.1);">Expose SaaS providers and email controls.</td></tr>
+                <tr><td style="padding: 0.9rem; border: 1px solid rgba(255,255,255,0.1);">SOA</td><td style="padding: 0.9rem; border: 1px solid rgba(255,255,255,0.1);">Start of Authority.</td><td style="padding: 0.9rem; border: 1px solid rgba(255,255,255,0.1);">Shows zone metadata and responsible DNS server.</td></tr>
+                <tr><td style="padding: 0.9rem; border: 1px solid rgba(255,255,255,0.1);">PTR</td><td style="padding: 0.9rem; border: 1px solid rgba(255,255,255,0.1);">Reverse DNS.</td><td style="padding: 0.9rem; border: 1px solid rgba(255,255,255,0.1);">Maps IPs back to names.</td></tr>
+                <tr><td style="padding: 0.9rem; border: 1px solid rgba(255,255,255,0.1);">SRV / CNAME</td><td style="padding: 0.9rem; border: 1px solid rgba(255,255,255,0.1);">Service records and aliases.</td><td style="padding: 0.9rem; border: 1px solid rgba(255,255,255,0.1);">Reveal services, identity providers, and cloud-hosted aliases.</td></tr>
+              </table>
+              <p>Tools include <code>dig</code>, <code>nslookup</code>, <code>host</code>, dnsrecon, dnsenum, fierce, MassDNS, dnscan, and public resolvers such as Cloudflare DNS. Reverse DNS can be performed with <code>dig -x 192.0.2.10</code> or <code>nslookup 192.0.2.10</code>. Bulk reverse lookups can be done with ReverseDNS.io, MXToolbox, and ViewDNS.info.</p>
+
+              <h2 style="color: #fff; font-size: 2rem; margin-top: 4rem;">7. Network and Email Footprinting</h2>
+              <p>Network footprinting validates routes, public services, and provider boundaries. Traceroute shows the path packets take to reach a destination and can reveal routers, hops, carrier networks, possible firewall boundaries, and latency changes. Common tools include traceroute, tracert, mtr, pathping, tcptraceroute, and Paris Traceroute.</p>
+              <p>Email footprinting focuses on mail flow and authentication. Header analysis can show sending servers, relays, security gateways, and originating infrastructure. DNS records reveal SPF, DKIM, and DMARC posture. Tools such as MXToolbox, MailTester.com, Hunter.io, VoilaNorbert, Clearbit Connect, and EmailRep.io help assess mail configuration, address patterns, verification, and reputation.</p>
+              <p>For defenders, the important output is not just a list of hosts. It is a map: which services are public, which provider owns each route, whether email authentication is strict, and where monitoring should alert.</p>
+
+              <h2 style="color: #fff; font-size: 2rem; margin-top: 4rem;">8. Social Engineering Footprinting</h2>
+              <p>Social engineering reconnaissance studies people, process, habits, trust relationships, and physical routines. The purpose in an ethical program is awareness, control testing, and risk reduction, not manipulation of real people outside approval.</p>
+              <ul style="font-size: 0.95rem;">
+                <li><strong>Eavesdropping:</strong> Learning sensitive details from public conversations in places such as cafes, airports, public transport, or shared offices.</li>
+                <li><strong>Shoulder surfing:</strong> Observing passwords, PINs, badges, documents, or screens.</li>
+                <li><strong>Dumpster diving:</strong> Searching discarded material for documents, storage media, notes, org charts, invoices, or printed emails.</li>
+                <li><strong>Impersonation:</strong> Pretending to be IT support, a vendor, a contractor, a new employee, or an authority figure.</li>
+                <li><strong>Modern vectors:</strong> Vishing, smishing, pretexting, baiting with removable media, and tailgating into restricted areas.</li>
+              </ul>
+              <p>Countermeasure-focused reporting should identify what information made the pretext believable, which process allowed it, and which training, verification, badge, visitor, or disposal controls should change.</p>
+
+              <h2 style="color: #fff; font-size: 2rem; margin-top: 4rem;">9. Automation, Advanced Tools, and AI</h2>
+              <p>Modern reconnaissance produces too much data for manual tracking. Automation collects, normalizes, deduplicates, tags, screenshots, resolves, and prioritizes findings so the assessor can focus on verification and risk.</p>
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; font-size: 0.95rem;">
+                <div style="background: rgba(255,255,255,0.03); padding: 1.25rem; border-radius: 8px;"><strong style="color: var(--accent-blue);">Recon-ng:</strong> Modular Python framework for domains, contacts, credentials, and API integrations such as Shodan, Censys, and VirusTotal.</div>
+                <div style="background: rgba(255,255,255,0.03); padding: 1.25rem; border-radius: 8px;"><strong style="color: var(--accent-purple);">theHarvester:</strong> Email harvesting, subdomain enumeration, and virtual host checking across search and intelligence sources.</div>
+                <div style="background: rgba(255,255,255,0.03); padding: 1.25rem; border-radius: 8px;"><strong style="color: var(--accent-green);">SpiderFoot:</strong> Automated OSINT platform with more than 200 modules, relationship visualization, and leak/vulnerability discovery.</div>
+                <div style="background: rgba(255,255,255,0.03); padding: 1.25rem; border-radius: 8px;"><strong style="color: var(--accent-red);">OWASP Amass:</strong> Deep attack-surface mapping using passive DNS, active resolution, archives, certificate transparency, and APIs.</div>
+                <div style="background: rgba(255,255,255,0.03); padding: 1.25rem; border-radius: 8px;"><strong style="color: #fff;">Maltego:</strong> Visual link analysis for domains, DNS names, IPs, netblocks, people, emails, and social relationships.</div>
+                <div style="background: rgba(255,255,255,0.03); padding: 1.25rem; border-radius: 8px;"><strong style="color: #fff;">Specialized tooling:</strong> Subfinder, Assetfinder, Findomain, Knockpy, Altdns, MassDNS, dnsx, PureDNS, httpx, httprobe, Waybackurls, Gau, Aquatone, EyeWitness, Gowitness, Naabu, Masscan, RustScan, Wappalyzer, Webanalyze, WhatWeb, GitHound, truffleHog, GitRob, ScoutSuite, Prowler, CloudMapper, CertSpotter, DarkSearch, Ahmia, OnionScan, DeHashed, HIBP, and Intelligence X.</div>
+              </div>
+
+              <h3 style="color: #fff; margin-top: 2.5rem;">AI-Assisted Reconnaissance</h3>
+              <p>AI can help create authorized search queries, summarize outputs, cluster subdomains, parse MassDNS results, identify unusual naming patterns, generate defensive reports, and turn tool output into executive summaries. It should not be used to create phishing pretexts, impersonation scripts, or instructions for unauthorized compromise.</p>
+              <p>Good defensive prompts ask for categorization, validation checklists, exposure explanations, and remediation language. Example: <code>Summarize these authorized subdomain enumeration results, group assets by business function, flag likely staging systems, and draft remediation notes.</code></p>
+
+              <h2 style="color: #fff; font-size: 2rem; margin-top: 4rem;">10. Footprinting Countermeasures</h2>
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
+                <div style="background: rgba(0,240,255,0.05); border: 1px solid rgba(0,240,255,0.12); padding: 1.5rem; border-radius: 8px;">
+                  <h3 style="margin-top: 0; color: var(--accent-blue);">Organizational Controls</h3>
+                  <ul style="font-size: 0.95rem; margin-bottom: 0;">
+                    <li>Minimize public information exposure on websites, documents, and press material.</li>
+                    <li>Train employees to recognize social engineering, protect personal details, and dispose of sensitive documents properly.</li>
+                    <li>Restrict staging, test, and deprecated subdomains with authentication, IP controls, or removal.</li>
+                    <li>Define social media policies, privacy expectations, and geotagging restrictions.</li>
+                    <li>Implement SPF, DKIM, DMARC, phishing training, and email filtering.</li>
+                  </ul>
+                </div>
+                <div style="background: rgba(176,0,255,0.05); border: 1px solid rgba(176,0,255,0.12); padding: 1.5rem; border-radius: 8px;">
+                  <h3 style="margin-top: 0; color: var(--accent-purple);">Technical Controls</h3>
+                  <ul style="font-size: 0.95rem; margin-bottom: 0;">
+                    <li>Use Whois privacy protection and privacy-enabled registrars.</li>
+                    <li>Apply DNSSEC, split-horizon DNS, and regular DNS record audits.</li>
+                    <li>Hide origin infrastructure with CDN/WAF where appropriate and block unnecessary traceroute responses.</li>
+                    <li>Harden web servers by removing default pages, verbose errors, directory indexing, old backups, and development files.</li>
+                    <li>Audit cloud storage, IAM policies, exposed API keys, and public buckets.</li>
+                    <li>Secure IoT with changed defaults, reduced services, segmented networks, and firmware updates.</li>
+                    <li>Use <code>noindex</code>, careful <code>robots.txt</code>, cache removal requests, and Google Alerts for leak monitoring.</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="glass-card" style="padding: 3rem; margin: 4rem 0; border-left: 4px solid var(--accent-green);">
+                <h2 style="margin-top: 0; color: #fff; font-size: 2rem;">Modern Footprinting Workflow</h2>
+                <h3 style="color: var(--accent-green);">Phase 1: Passive Reconnaissance</h3>
+                <ol style="font-size: 0.95rem;">
+                  <li><strong>Target identification:</strong> Define the main domain, brands, subsidiaries, acquisitions, and approved scope.</li>
+                  <li><strong>Domain enumeration:</strong> Use Amass, Subfinder, Assetfinder, certificate transparency, Waybackurls, and Gau.</li>
+                  <li><strong>Technology fingerprinting:</strong> Use Wappalyzer, httpx, Shodan, Censys, and GitHub review to identify stacks and exposed services.</li>
+                  <li><strong>People and social OSINT:</strong> Review LinkedIn, theHarvester, Sherlock, Hunter.io, breach exposure services, and public repositories.</li>
+                  <li><strong>Leaked data awareness:</strong> Check paste, breach, and dark-web intelligence sources where the engagement scope and law allow it.</li>
+                </ol>
+                <h3 style="color: var(--accent-blue);">Phase 2: Active Reconnaissance</h3>
+                <ol style="font-size: 0.95rem;">
+                  <li><strong>DNS enumeration:</strong> Resolve records, attempt authorized zone-transfer checks, and validate discovered names.</li>
+                  <li><strong>Network mapping:</strong> Use traceroute/MTR and approved port discovery to understand public exposure.</li>
+                  <li><strong>Web application mapping:</strong> Crawl authorized sites, inspect JavaScript for endpoints, and document API surfaces.</li>
+                  <li><strong>Validation:</strong> Screenshot, tag, deduplicate, and correlate findings with known risks.</li>
+                </ol>
+                <h3 style="color: var(--accent-purple);">Phase 3: AI-Enhanced Analysis</h3>
+                <ol style="font-size: 0.95rem; margin-bottom: 0;">
+                  <li>Summarize tool output into findings, evidence, affected assets, and recommended fixes.</li>
+                  <li>Identify high-value assets and likely attack paths for defensive prioritization.</li>
+                  <li>Create clear reports for technical teams and leadership without exposing unnecessary sensitive data.</li>
+                </ol>
+              </div>
+
+              <h2 style="color: #fff; font-size: 2rem;">Key Takeaways</h2>
+              <ol style="font-size: 0.98rem;">
+                <li>Footprinting is the foundation of ethical hacking because later testing depends on the accuracy of early information.</li>
+                <li>Passive footprinting is quieter but may be incomplete or stale.</li>
+                <li>Active footprinting is more accurate but creates logs and must be authorized.</li>
+                <li>Modern reconnaissance relies heavily on automation and correlation across many sources.</li>
+                <li>AI is useful for query generation, dataset analysis, clustering, and report writing, but must remain within ethical scope.</li>
+                <li>The attack surface now includes cloud, IoT, APIs, mobile apps, public code, SaaS, identity providers, and employee social profiles.</li>
+                <li>Countermeasures must be proactive: audit public information, reduce exposed assets, train staff, monitor leaks, and harden DNS, email, cloud, web, and device controls.</li>
+              </ol>
+
+            </div>
+
+            <div style="margin-top: 5rem; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 2rem;">
+               <a href="/education/module-1" class="btn" style="text-decoration: none; padding: 1rem 2rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; color: #fff; display: flex; align-items: center; gap: 0.5rem; font-weight: bold; transition: all 0.2s;">
+                 <span>&larr;</span> Previous Module
+               </a>
+               <div style="text-align: right;">
+                 <span style="color: #888; font-size: 0.95rem; display: block; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 1px;">Next Module</span>
+                 <span style="color: #fff; cursor: not-allowed; opacity: 0.5; font-size: 1.1rem; font-weight: bold;">Scanning Networks &rarr;</span>
                </div>
             </div>
           </article>
@@ -1089,6 +1364,7 @@ app.get('/sitemap.xml', async (c) => {
     { loc: '/blog', changefreq: 'daily', priority: '0.8' },
     { loc: '/articles', changefreq: 'daily', priority: '0.8' },
     { loc: '/education', changefreq: 'weekly', priority: '0.8' },
+    { loc: '/education/module-2', changefreq: 'weekly', priority: '0.7' },
     { loc: '/archive', changefreq: 'daily', priority: '0.7' },
   ];
 
