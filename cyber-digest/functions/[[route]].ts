@@ -64,8 +64,12 @@ function tagBadge(name: string): string {
   return `<a class="tag-badge" href="/tags/${encodeURIComponent(name)}">#${escapeHtml(name)}</a>`;
 }
 
+function jsonLdScript(data: unknown): string {
+  return `<script type="application/ld+json">${JSON.stringify(data).replaceAll('<', '\\u003c')}</script>`;
+}
+
 function sidebar(currentPath: string): string {
-  const isActive = (path: string) => currentPath === path ? 'sidebar__link--active' : '';
+  const isActive = (path: string) => currentPath === path || (path !== '/' && currentPath.startsWith(`${path}/`)) ? 'sidebar__link--active' : '';
   return `<aside class="dashboard-sidebar">
     <div class="sidebar__brand"><span>[</span>CYBERDIGEST<span>]</span></div>
     <nav class="sidebar__nav">
@@ -88,7 +92,7 @@ function layout(options: { title?: string; description?: string; path?: string; 
   const title = options.title ?? 'CyberDigest - Daily Cybersecurity Intelligence';
   const description = options.description ?? 'Automated daily cybersecurity news, educational blogs, and in-depth threat analysis. Powered by trusted sources and AI.';
   const canonical = `${siteUrl}${options.path ?? '/'}`;
-  return `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="${escapeAttr(description)}"><meta name="theme-color" content="#030509"><title>${escapeHtml(title)}</title><link rel="canonical" href="${escapeAttr(canonical)}"><meta property="og:title" content="${escapeAttr(title)}"><meta property="og:description" content="${escapeAttr(description)}"><meta property="og:type" content="${escapeAttr(options.ogType ?? 'website')}"><meta property="og:url" content="${escapeAttr(canonical)}"><meta property="og:site_name" content="CyberDigest"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${escapeAttr(title)}"><meta name="twitter:description" content="${escapeAttr(description)}"><link rel="alternate" type="application/rss+xml" title="CyberDigest RSS" href="/rss.xml"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="manifest" href="/manifest.json"><link rel="dns-prefetch" href="https://fonts.googleapis.com"><link rel="dns-prefetch" href="https://fonts.gstatic.com"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap"></noscript><link rel="stylesheet" href="/styles/site.css">${options.head ?? ''}</head><body class="dashboard-body"><div class="dashboard-layout">${sidebar(options.path ?? '/')} <main class="dashboard-main">${options.body}</main></div><button id="rocket-scroll" class="rocket-scroll" aria-label="Scroll to top"><div class="double-arrow"><span></span><span></span></div><span class="rocket-fire"></span></button><script>if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('/sw.js'); }); } const rocket = document.getElementById('rocket-scroll'); const scrollable = document.querySelector('.dashboard-content-area') || window; const toggleRocket = () => { const scrollY = scrollable.scrollTop || window.scrollY; if (scrollY > 300) { rocket.classList.add('visible'); } else { rocket.classList.remove('visible'); } }; scrollable.addEventListener('scroll', toggleRocket, { passive: true }); window.addEventListener('scroll', toggleRocket, { passive: true }); rocket.addEventListener('click', () => { rocket.classList.add('launching'); scrollable.scrollTo({ top: 0, behavior: 'smooth' }); if (scrollable !== window) window.scrollTo({ top: 0, behavior: 'smooth' }); setTimeout(() => { rocket.classList.remove('launching'); rocket.classList.remove('visible'); }, 1000); });</script></body></html>`;
+  return `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="${escapeAttr(description)}"><meta name="robots" content="index, follow, max-image-preview:large"><meta name="theme-color" content="#030509"><title>${escapeHtml(title)}</title><link rel="canonical" href="${escapeAttr(canonical)}"><meta property="og:title" content="${escapeAttr(title)}"><meta property="og:description" content="${escapeAttr(description)}"><meta property="og:type" content="${escapeAttr(options.ogType ?? 'website')}"><meta property="og:url" content="${escapeAttr(canonical)}"><meta property="og:site_name" content="CyberDigest"><meta property="og:locale" content="en_US"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${escapeAttr(title)}"><meta name="twitter:description" content="${escapeAttr(description)}"><link rel="alternate" type="application/rss+xml" title="CyberDigest RSS" href="/rss.xml"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="manifest" href="/manifest.json"><link rel="dns-prefetch" href="https://fonts.googleapis.com"><link rel="dns-prefetch" href="https://fonts.gstatic.com"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap"></noscript><link rel="stylesheet" href="/styles/site.css">${options.head ?? ''}</head><body class="dashboard-body"><div class="dashboard-layout">${sidebar(options.path ?? '/')} <main class="dashboard-main">${options.body}</main></div><button id="rocket-scroll" class="rocket-scroll" aria-label="Scroll to top"><div class="double-arrow"><span></span><span></span></div><span class="rocket-fire"></span></button><script>if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('/sw.js'); }); } const rocket = document.getElementById('rocket-scroll'); const scrollable = document.querySelector('.dashboard-content-area') || window; const toggleRocket = () => { const scrollY = scrollable.scrollTop || window.scrollY; if (scrollY > 300) { rocket.classList.add('visible'); } else { rocket.classList.remove('visible'); } }; scrollable.addEventListener('scroll', toggleRocket, { passive: true }); window.addEventListener('scroll', toggleRocket, { passive: true }); rocket.addEventListener('click', () => { rocket.classList.add('launching'); scrollable.scrollTo({ top: 0, behavior: 'smooth' }); if (scrollable !== window) window.scrollTo({ top: 0, behavior: 'smooth' }); setTimeout(() => { rocket.classList.remove('launching'); rocket.classList.remove('visible'); }, 1000); });</script></body></html>`;
 }
 
 function feedCard(post: Post): string {
@@ -237,10 +241,42 @@ app.get('/blog', (c) => listingPage(c, 'blog', 'Cyber <span>Blog</span>', 'Educa
 app.get('/articles', (c) => listingPage(c, 'article', 'Threat <span>Articles</span>', 'Deep Analysis', 'Long-form security analysis and prioritization guidance.'));
 
 app.get('/education', (c) => {
+  const jsonLd = jsonLdScript([
+    {
+      '@context': 'https://schema.org',
+      '@type': 'CollectionPage',
+      '@id': `${siteUrl}/education#collection`,
+      name: 'Hack Lab',
+      headline: 'Hack Lab - Ethical Hacking Education',
+      description: 'Advanced offensive security resources, structured learning modules, and ethical hacking methodology.',
+      url: `${siteUrl}/education`,
+      publisher: { '@type': 'Organization', name: 'CyberDigest', url: siteUrl },
+      mainEntity: {
+        '@type': 'ItemList',
+        name: 'Hack Lab Curriculum',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Introduction to Ethical Hacking', url: `${siteUrl}/education/module-1` },
+          { '@type': 'ListItem', position: 2, name: 'Footprinting and Reconnaissance', url: `${siteUrl}/education/module-2` },
+          { '@type': 'ListItem', position: 3, name: 'Scanning Networks', description: 'Coming soon' },
+          { '@type': 'ListItem', position: 4, name: 'Enumeration', description: 'Coming soon' },
+        ],
+      },
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'CyberDigest', item: siteUrl },
+        { '@type': 'ListItem', position: 2, name: 'Hack Lab', item: `${siteUrl}/education` },
+      ],
+    },
+  ]);
+
   return c.html(layout({
     title: 'Hack Lab - Ethical Hacking Education',
-    description: 'Practical ethical hacking tutorials, offensive security resources, and lab writeups.',
+    description: 'CyberDigest Hack Lab offers structured ethical hacking modules covering security fundamentals, reconnaissance, scanning, enumeration, and defensive methodology.',
     path: '/education',
+    head: jsonLd,
     body: `
       <div class="dashboard-content-area">
         <div class="container">
@@ -328,10 +364,45 @@ app.get('/education', (c) => {
 });
 
 app.get('/education/module-1', (c) => {
+  const jsonLd = jsonLdScript([
+    {
+      '@context': 'https://schema.org',
+      '@type': 'LearningResource',
+      '@id': `${siteUrl}/education/module-1#learning-resource`,
+      name: 'Introduction to Ethical Hacking',
+      headline: 'Module 1: Introduction to Ethical Hacking',
+      description: 'A comprehensive guide to information security, threat modeling, hacker classes, attack vectors, security controls, incident response, and ethical hacking laws.',
+      url: `${siteUrl}/education/module-1`,
+      isPartOf: { '@type': 'Course', name: 'Hack Lab Ethical Hacking Curriculum', url: `${siteUrl}/education` },
+      learningResourceType: 'Course Module',
+      educationalLevel: 'Beginner to Intermediate',
+      teaches: [
+        'Information security fundamentals',
+        'Threat modeling',
+        'Ethical hacking methodology',
+        'Security controls',
+        'Incident response',
+        'Cybersecurity laws and standards',
+      ],
+      publisher: { '@type': 'Organization', name: 'CyberDigest', url: siteUrl },
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'CyberDigest', item: siteUrl },
+        { '@type': 'ListItem', position: 2, name: 'Hack Lab', item: `${siteUrl}/education` },
+        { '@type': 'ListItem', position: 3, name: 'Introduction to Ethical Hacking', item: `${siteUrl}/education/module-1` },
+      ],
+    },
+  ]);
+
   return c.html(layout({
-    title: 'Module 1: Introduction to Ethical Hacking - Hack Lab',
-    description: 'A comprehensive guide to information security, threat modeling, and ethical hacking.',
-    path: '/education',
+    title: 'Module 1: Introduction to Ethical Hacking - CyberDigest Hack Lab',
+    description: 'Learn ethical hacking fundamentals, information security concepts, threat modeling, attack vectors, security controls, incident response, and cyber law basics.',
+    path: '/education/module-1',
+    ogType: 'article',
+    head: jsonLd,
     body: `
       <div class="dashboard-content-area">
         <div class="container" style="max-width: 1100px; margin: 0 auto;">
@@ -1025,10 +1096,47 @@ app.get('/education/module-1', (c) => {
 });
 
 app.get('/education/module-2', (c) => {
+  const jsonLd = jsonLdScript([
+    {
+      '@context': 'https://schema.org',
+      '@type': 'LearningResource',
+      '@id': `${siteUrl}/education/module-2#learning-resource`,
+      name: 'Footprinting and Reconnaissance',
+      headline: 'Module 2: Footprinting and Reconnaissance',
+      description: 'A complete advanced guide to footprinting concepts, OSINT, search engine reconnaissance, internet research services, social networking OSINT, Whois, DNS, network and email footprinting, automation, AI-assisted analysis, and countermeasures.',
+      url: `${siteUrl}/education/module-2`,
+      isPartOf: { '@type': 'Course', name: 'Hack Lab Ethical Hacking Curriculum', url: `${siteUrl}/education` },
+      learningResourceType: 'Course Module',
+      educationalLevel: 'Intermediate',
+      teaches: [
+        'Passive and active footprinting',
+        'Search engine reconnaissance',
+        'Internet research services',
+        'Social networking OSINT',
+        'Whois and DNS footprinting',
+        'Network and email reconnaissance',
+        'Reconnaissance automation',
+        'Footprinting countermeasures',
+      ],
+      publisher: { '@type': 'Organization', name: 'CyberDigest', url: siteUrl },
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'CyberDigest', item: siteUrl },
+        { '@type': 'ListItem', position: 2, name: 'Hack Lab', item: `${siteUrl}/education` },
+        { '@type': 'ListItem', position: 3, name: 'Footprinting and Reconnaissance', item: `${siteUrl}/education/module-2` },
+      ],
+    },
+  ]);
+
   return c.html(layout({
-    title: 'Module 2: Footprinting and Reconnaissance - Hack Lab',
-    description: 'A complete advanced guide to footprinting concepts, OSINT, search engines, DNS, WHOIS, network and email reconnaissance, automation, AI-assisted analysis, and countermeasures.',
-    path: '/education',
+    title: 'Module 2: Footprinting and Reconnaissance - CyberDigest Hack Lab',
+    description: 'Master ethical footprinting and reconnaissance with OSINT, search engines, Whois, DNS, network and email footprinting, automation, AI analysis, and countermeasures.',
+    path: '/education/module-2',
+    ogType: 'article',
+    head: jsonLd,
     body: `
       <div class="dashboard-content-area">
         <div class="container" style="max-width: 1100px; margin: 0 auto;">
@@ -1364,7 +1472,8 @@ app.get('/sitemap.xml', async (c) => {
     { loc: '/blog', changefreq: 'daily', priority: '0.8' },
     { loc: '/articles', changefreq: 'daily', priority: '0.8' },
     { loc: '/education', changefreq: 'weekly', priority: '0.8' },
-    { loc: '/education/module-2', changefreq: 'weekly', priority: '0.7' },
+    { loc: '/education/module-1', changefreq: 'monthly', priority: '0.75' },
+    { loc: '/education/module-2', changefreq: 'monthly', priority: '0.75' },
     { loc: '/archive', changefreq: 'daily', priority: '0.7' },
   ];
 
